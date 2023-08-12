@@ -5,7 +5,7 @@ import {
   setLoggedIn,
   setRefreshToken,
 } from '@src/redux/slice/authSlice';
-import axiosInstance from '@src/utils/axiosInstance';
+import axiosInstance from '@src/api/axiosInstance';
 
 export const useCheckEmail = () => {
   return useMutation({

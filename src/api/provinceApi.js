@@ -1,4 +1,4 @@
-import axiosInstance from '@src/utils/axiosInstance';
+import axiosInstance from '@src/api/axiosInstance';
 import { useQuery } from '@tanstack/react-query';
 
 export const useGetProvinces = () => {

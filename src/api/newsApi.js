@@ -19,6 +19,7 @@ const getNews = async ({ pageParam = 1 }) => {
     'https://sehatnegeriku.kemkes.go.id/wp-json/wp/v2/posts',
     {
       params: {
+        search: 'semia',
         page: pageParam,
         per_page: 10,
         _embed: true,
@@ -34,18 +35,21 @@ const getNews = async ({ pageParam = 1 }) => {
 
   const berita = pages.map((page) => {
     return {
-      ID: page.id,
-      JUDUL: page.title.rendered,
-      ISI: page.content.rendered,
-      AUTHOR: { NAMA: 'Kemenkes' },
-      KATEGORI: { NAMAKATEGORI: 'Berita' },
-      THUMBNAIL:
+      id: page.id,
+      title: page.title.rendered,
+      content: page.content.rendered,
+      AUTHOR: { name: 'Kemenkes' },
+      category: { name: 'Talasemia' },
+      thumbnail:
         page._embedded['wp:featuredmedia'][0]?.media_details?.sizes?.medium
           ?.source_url,
       created_at: page.date,
     };
   });
 
+  if (berita.length < 10) {
+    return { berita };
+  }
   return {
     berita,
     next_page: pageParam + 1,
