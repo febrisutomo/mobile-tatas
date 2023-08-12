@@ -12,8 +12,7 @@ import { useGetNews } from '@src/api/newsApi';
 
 export default function Home({ navigation }) {
   const auth = useSelector((state) => state.authSlice);
-
-  console.info('auth', auth);
+  console.log('Home ~ auth:', auth);
 
   const images = [
     {
@@ -43,7 +42,7 @@ export default function Home({ navigation }) {
     {
       title: 'Skrining Talasemia',
       icon: 'clipboard-outline',
-      route: 'Screening',
+      route: 'Form Screening',
     },
     {
       title: 'Screening',
@@ -57,9 +56,9 @@ export default function Home({ navigation }) {
       route: 'Faskes',
     },
     {
-      title: 'Menu Lainnya',
-      icon: 'grid-outline',
-      route: 'Screening',
+      title: 'Faskes',
+      icon: 'map-outline',
+      route: 'Faskes',
     },
   ];
 

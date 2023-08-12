@@ -25,7 +25,7 @@ export default function ShowNews({ route }) {
             color: COLORS.dark,
           }}
         >
-          {news.JUDUL}
+          {news.title}
         </Text>
 
         <View
@@ -38,7 +38,7 @@ export default function ShowNews({ route }) {
           <Image
             style={{ height: 24, width: 24, borderRadius: 16, marginRight: 6 }}
             defaultSource={thumbnailPlacehloder}
-            source={require('@assets/images/default-profile-picture.png')}
+            source={require('@assets/images/logo-kemenkes.png')}
           />
           <Text
             style={{
@@ -76,9 +76,9 @@ export default function ShowNews({ route }) {
 
         <Image
           source={
-            news.THUMBNAIL
+            news.thumbnail
               ? {
-                  uri: news.THUMBNAIL,
+                  uri: news.thumbnail,
                 }
               : require('@assets/images/img-placeholder.png')
           }
@@ -94,7 +94,7 @@ export default function ShowNews({ route }) {
         <RenderHTML
           contentWidth={width}
           source={{
-            html: news.ISI,
+            html: news.content,
           }}
           tagsStyles={{ p: { fontSize: 16 } }}
         />

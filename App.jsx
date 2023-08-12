@@ -11,22 +11,30 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 export default function App() {
-  const requestLocationPermission = async () => {
+  const requestPermissions = async () => {
     try {
-      const userResponse = await PermissionsAndroid.requestMultiple([
+      const granted = await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
       ]);
       if (
-        userResponse['android.permission.ACCESS_FINE_LOCATION'] &&
-        userResponse['android.permission.ACCESS_COARSE_LOCATION'] === 'granted'
+        granted[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION] ===
+          PermissionsAndroid.RESULTS.GRANTED &&
+        granted[PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION] ===
+          PermissionsAndroid.RESULTS.GRANTED &&
+        granted[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] ===
+          PermissionsAndroid.RESULTS.GRANTED &&
+        granted[PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE] ===
+          PermissionsAndroid.RESULTS.GRANTED
       ) {
         console.log('All permissions granted!');
       } else {
         console.log('Permissions denied!, You need to give permissions');
       }
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      console.log('Error while requesting permissions:', error);
     }
     return null;
   };
@@ -35,7 +43,7 @@ export default function App() {
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
-    requestLocationPermission();
+    requestPermissions();
   }, []);
 
   const queryClient = new QueryClient();

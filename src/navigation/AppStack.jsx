@@ -15,6 +15,7 @@ import { TouchableOpacity } from 'react-native';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
 import ScreeningForm from '@src/screens/screening/ScreeningForm';
+import Model from '@src/screens/model/Model';
 
 export const AppStack = () => {
   const Stack = createNativeStackNavigator();
@@ -38,7 +39,7 @@ export const AppStack = () => {
       <Stack.Screen
         name="Show News"
         component={ShowNews}
-        options={({ route }) => ({ title: route.params.kategori })}
+        options={({ route }) => ({ title: route.params.category })}
       />
       <Stack.Screen
         name="Screening"
@@ -61,12 +62,9 @@ export const AppStack = () => {
         }}
       />
       <Stack.Screen name="Form Screening" component={ScreeningForm} />
-      <Stack.Screen
-        name="Faskes"
-        component={Faskes}
-        options={{ title: 'Info Lokasi Faskes' }}
-      />
+      <Stack.Screen name="Faskes" component={Faskes} />
       <Stack.Screen name="Pendaftaran" component={Register} />
+      <Stack.Screen name="Model" component={Model} />
     </Stack.Navigator>
   );
 };

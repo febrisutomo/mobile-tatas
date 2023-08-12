@@ -7,9 +7,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native';
 import Home from '@src/screens/home/Home';
 import NewsList from '@src/screens/news/NewsList';
-import Faskes from '@src/screens/faskes/Faskes';
 import Profile from '@src/screens/profile/Profile';
 import Login from '@src/screens/auth/Login';
+import Edication from '@src/screens/education/Edication';
 
 export const HomeTabs = () => {
   const Tab = createBottomTabNavigator();
@@ -43,8 +43,8 @@ export const HomeTabs = () => {
 
           if (route.name === 'Home') {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Faskes') {
-            iconName = focused ? 'map' : 'map-outline';
+          } else if (route.name === 'Edukasi') {
+            iconName = focused ? 'book' : 'book-outline';
           } else if (route.name === 'Check') {
             iconName = focused ? 'flask' : 'flask-outline';
           } else if (route.name === 'News') {
@@ -85,7 +85,7 @@ export const HomeTabs = () => {
         }}
       />
       {/* <Tab.Screen name="Check" component={Screening} /> */}
-      <Tab.Screen name="Faskes" component={Faskes} />
+      <Tab.Screen name="Edukasi" component={Edication} />
       <Tab.Screen
         name="Profile"
         component={loggedIn ? Profile : Login}

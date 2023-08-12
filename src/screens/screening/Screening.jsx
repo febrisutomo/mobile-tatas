@@ -95,7 +95,7 @@ export default function Screening({ navigation }) {
 
               <TouchableOpacity
                 activeOpacity={0.8}
-                onPress={() => navigation.navigate('Screening')}
+                onPress={() => navigation.navigate('Form Screening')}
               >
                 <View
                   style={{

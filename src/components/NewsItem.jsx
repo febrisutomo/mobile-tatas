@@ -3,7 +3,7 @@ import React, { memo } from 'react';
 import { FONTS, COLORS } from '@src/constants';
 
 function NewsItem({ navigation, item, style }) {
-  const thumbnailPlacehloder = require('../../assets/images/img-placeholder.png');
+  const thumbnailPlacehloder = require('@assets/images/img-placeholder.png');
   const getDateDiffString = (date) => {
     const today = new Date();
     const diffTime = today.getTime() - date.getTime();
@@ -45,16 +45,16 @@ function NewsItem({ navigation, item, style }) {
       onPress={() =>
         navigation.navigate('Show News', {
           news: item,
-          kategori: item.KATEGORI.NAMAKATEGORI,
+          category: item.category.name,
         })
       }
     >
       <Image
         defaultSource={thumbnailPlacehloder}
         source={
-          item.THUMBNAIL
+          item.thumbnail
             ? {
-                uri: item.THUMBNAIL,
+                uri: item.thumbnail,
               }
             : thumbnailPlacehloder
         }
@@ -70,7 +70,7 @@ function NewsItem({ navigation, item, style }) {
             color: COLORS.dark,
           }}
         >
-          {item.JUDUL}
+          {item.title}
         </Text>
         <Text
           style={{

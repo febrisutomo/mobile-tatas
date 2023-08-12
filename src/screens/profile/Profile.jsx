@@ -3,6 +3,7 @@ import React, { useRef, useCallback } from 'react';
 import Button from '@components/Button';
 import { COLORS, FONTS } from '@src/constants';
 import Icon from 'react-native-vector-icons/Ionicons';
+import FA6 from 'react-native-vector-icons/FontAwesome6';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { useDispatch } from 'react-redux';
@@ -18,19 +19,19 @@ export default function Profile({ navigation }) {
   const data = [
     {
       title: 'Ubah Profil',
-      icon: 'person',
+      icon: 'user-pen',
       route: 'Ubah Profil',
     },
     {
       title: 'Ubah Password',
-      icon: 'key',
+      icon: 'lock',
       route: 'Ubah Password',
     },
-    // {
-    //   title: 'Pengaturan',
-    //   icon: 'settings',
-    //   route: 'Edit Profile',
-    // },
+    {
+      title: 'Model',
+      icon: 'database',
+      route: 'Model',
+    },
     // {
     //   title: 'Kebijakan dan Ketentuan',
     //   icon: 'shield-checkmark',
@@ -163,7 +164,7 @@ export default function Profile({ navigation }) {
                     borderRadius: 100,
                   }}
                 >
-                  <Icon name={item.icon} size={20} color={COLORS.primary} />
+                  <FA6 name={item.icon} size={20} color={COLORS.primary} />
                 </View>
 
                 <Text
