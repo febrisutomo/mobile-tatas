@@ -93,9 +93,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.tatasrn"
+    namespace "com.informatika.tatas"
     defaultConfig {
-        applicationId "com.tatasrn"
+        applicationId "com.informatika.tatas"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

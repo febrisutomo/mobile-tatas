@@ -1,4 +1,4 @@
-package com.tatasrn;
+package com.informatika.tatas;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
