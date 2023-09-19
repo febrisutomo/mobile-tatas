@@ -5,7 +5,6 @@ import { COLORS } from '@src/constants';
 import * as yup from 'yup';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-const Tab = createMaterialTopTabNavigator();
 import TextInput from '@components/TextInput';
 import ModalSelect from '@components/ModalSelect';
 import Button from '@components/Button';
@@ -361,6 +360,7 @@ const DataAlamat = () => {
 };
 
 const App = () => {
+  const Tab = createMaterialTopTabNavigator();
   return (
     <Tab.Navigator
       screenOptions={{

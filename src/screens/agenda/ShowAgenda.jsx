@@ -5,8 +5,7 @@ import RenderHTML from 'react-native-render-html';
 import { ScrollView } from 'react-native';
 import { FONTS, COLORS } from '@src/constants';
 
-export default function ShowNews({ route }) {
-  const thumbnailPlacehloder = require('@assets/images/img-placeholder.png');
+export default function ShowAgenda({ route }) {
   const { width } = useWindowDimensions();
   const { news } = route.params;
   return (

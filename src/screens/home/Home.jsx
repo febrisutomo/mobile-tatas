@@ -1,302 +1,259 @@
-import { View, Text, FlatList, Pressable, RefreshControl } from 'react-native';
+import {
+  View,
+  Text,
+  Pressable,
+  Image,
+  Dimensions,
+  StatusBar,
+} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { COLORS, FONTS } from '@src/constants';
-import NewsItem from '@components/NewsItem';
-import ImageSlider from '@components/ImageSlider';
-import Card from '@components/Card';
-import axios from 'axios';
+
 import { useSelector } from 'react-redux';
-import { useGetNews } from '@src/api/newsApi';
+import { useGetStaticPosts } from '@src/api/postApi';
+import Button from '@components/Button';
+import { ScrollView } from 'react-native-gesture-handler';
+import ImageSlider from '@components/ImageSlider';
 
 export default function Home({ navigation }) {
-  const auth = useSelector((state) => state.authSlice);
-  console.log('Home ~ auth:', auth);
+  const { user } = useSelector((state) => state.authSlice);
 
-  const images = [
-    {
-      id: 0,
-      uri: 'https://images.unsplash.com/photo-1607326957431-29d25d2b386f',
-      title: 'Dahlia',
-    }, // https://unsplash.com/photos/Jup6QMQdLnM
-    {
-      id: 1,
-      uri: 'https://images.unsplash.com/photo-1512238701577-f182d9ef8af7',
-      title: 'Sunflower',
-    }, // https://unsplash.com/photos/oO62CP-g1EA
-    {
-      id: 2,
-      uri: 'https://images.unsplash.com/photo-1627522460108-215683bdc9f6',
-      title: 'Zinnia',
-    }, // https://unsplash.com/photos/gKMmJEvcyA8
-
-    {
-      id: 3,
-      uri: 'https://images.unsplash.com/photo-1501577316686-a5cbf6c1df7e',
-      title: 'Hydrangea',
-    }, // https://unsplash.com/photos/coIBOiWBPjk
-  ];
-
-  const menu = [
-    {
-      title: 'Skrining Talasemia',
-      icon: 'clipboard-outline',
-      route: 'Form Screening',
-    },
-    {
-      title: 'Screening',
-      icon: 'flask-outline',
-      route: 'Screening',
-    },
-
-    {
-      title: 'Agenda',
-      icon: 'calendar-outline',
-      route: 'Faskes',
-    },
-    {
-      title: 'Faskes',
-      icon: 'map-outline',
-      route: 'Faskes',
-    },
-  ];
-
-  const { data: news = [], refetch } = useGetNews();
-
-  const onRefresh = () => {
-    refetch();
-  };
-
-  const [iconCuaca, setIconCuaca] = useState('cloudy-outline');
-  const [ucapan, setUcapan] = useState([]);
-  const [cuaca, setCuaca] = useState({});
-  const [temperature, setTemperature] = useState({});
-
-  const getCuaca = async () => {
-    try {
-      const h = new Date().getHours();
-      let greeting = '';
-      if (h >= 4 && h < 10) {
-        greeting = 'Selamat Pagi';
-      } else if (h >= 10 && h < 15) {
-        greeting = 'Selamat Siang';
-      } else if (h >= 15 && h < 18) {
-        greeting = 'Selamat Sore';
-      } else if (h >= 18 || h < 4) {
-        greeting = 'Selamat Malam';
-      }
-      setUcapan(greeting);
-
-      const { data } = await axios.get(
-        'https://cuaca-gempa-rest-api.vercel.app/weather/jawa-tengah/purwokerto',
-      );
-      let weather = data.data.params[6].times[2].name;
-      setCuaca(weather);
-      setTemperature(data.data.params[5].times[2].celcius.replace(' C', '℃'));
-      if (weather.toLowerCase().includes('hujan')) {
-        setIconCuaca('rainy-outline');
-      } else if (
-        weather.toLowerCase().includes('berawan') &&
-        greeting === 'Selamat Malam'
-      ) {
-        setIconCuaca('cloudy-night-outline');
-      } else {
-        setIconCuaca('cloudy-outline');
-      }
-      console.log('temperature', data.data.params[5].times[2].celcius);
-      console.log('cuaca', data.data.params[6].times[2].name);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+  // Gap stuff
+  const { width } = Dimensions.get('window');
+  const gap = 8;
+  const itemPerRow = 4;
+  const totalGapSize = (itemPerRow - 1) * gap;
+  const windowWidth = width - 16;
+  const childWidth = (windowWidth - totalGapSize) / itemPerRow;
+  const [menu, setMenu] = useState([]);
 
   useEffect(() => {
-    getCuaca();
-  }, []);
+    let mn = [
+      {
+        title: 'Hasil Screening',
+        icon: 'flask-outline',
+        route: 'Screening',
+      },
+
+      {
+        title: 'Berita dan Artikel',
+        icon: 'newspaper-outline',
+        route: 'Berita dan Artikel',
+      },
+      {
+        title: 'Agenda',
+        icon: 'calendar-outline',
+        route: 'Agenda',
+      },
+      {
+        title: 'Lokasi Faskes',
+        icon: 'map-outline',
+        route: 'Faskes',
+      },
+      {
+        title: 'Konfirmasi DNA',
+        icon: 'shield-checkmark-outline',
+        route: 'Konfirmasi DNA',
+      },
+      {
+        title: 'Model Prediksi',
+        icon: 'server-outline',
+        route: 'Model',
+      },
+    ];
+    if (user?.role?.name === 'Admin') {
+      setMenu(mn);
+    } else {
+      setMenu(mn.slice(0, 4));
+    }
+  }, [user]);
+
+  const { data: news = [] } = useGetStaticPosts();
 
   return (
     <SafeAreaView
       style={{
         flex: 1,
+        backgroundColor: 'white',
       }}
     >
-      <FlatList
-        refreshControl={
-          <RefreshControl refreshing={false} onRefresh={onRefresh} />
-        }
-        style={{ padding: 16 }}
-        data={news}
-        renderItem={({ item, index }) => (
-          <NewsItem
-            item={item}
-            navigation={navigation}
-            style={
-              index === news.length - 1 && {
-                borderBottomRightRadius: 12,
-                borderBottomLeftRadius: 12,
-              }
-            }
-          />
-        )}
-        ListHeaderComponent={
-          <View>
-            <View>
-              <View
-                style={{
-                  marginBottom: 16,
-                  display: 'flex',
-                  flexDirection: 'row',
-                }}
-              >
-                <Icon
-                  name={iconCuaca}
-                  size={32}
-                  color={COLORS.dark}
-                  style={{ marginRight: 8 }}
-                />
-                <View>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      fontFamily: FONTS.medium,
-                      color: COLORS.dark,
-                    }}
-                  >
-                    {ucapan},
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      fontFamily: FONTS.semiBold,
-                      color: COLORS.dark,
-                    }}
-                  >
-                    {`${temperature} ${cuaca} di Kabupaten Banyumas`}
-                  </Text>
-                </View>
-              </View>
-
-              {/* IMAGE SLIDER  */}
-              <ImageSlider images={images} />
-
-              {/* MENU  */}
-              <Card title="Menu" icon="grid-outline">
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  {menu.map((item, index) => (
-                    <View
-                      style={{
-                        alignItems: 'center',
-                        width: 72,
-                      }}
-                      key={index}
-                    >
-                      <Pressable
-                        onPress={() => navigation.navigate(item.route)}
-                        style={({ pressed }) => [
-                          {
-                            height: 64,
-                            width: 64,
-                            borderRadius: 32,
-                            borderColor: COLORS.lightGrey,
-                            backgroundColor: '#f1f1f1',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginBottom: 12,
-                          },
-                          pressed && {
-                            backgroundColor: '#eaeaea',
-                          },
-                        ]}
-                      >
-                        <Icon
-                          name={item.icon}
-                          size={32}
-                          color={COLORS.primary}
-                        />
-                      </Pressable>
-                      <View style={{ width: 80 }}>
-                        <Text
-                          style={{
-                            fontFamily: FONTS.medium,
-                            fontSize: 12,
-                            textAlign: 'center',
-                            color: COLORS.dark,
-                          }}
-                        >
-                          {item.title}
-                        </Text>
-                      </View>
-                    </View>
-                  ))}
-                </View>
-              </Card>
-            </View>
-
-            <View
+      <StatusBar
+        animated={true}
+        backgroundColor="#fff"
+        barStyle={'dark-content'}
+      />
+      <ScrollView>
+        <View
+          style={{
+            margin: 16,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 8,
+          }}
+        >
+          <Text
+            style={{
+              fontFamily: FONTS.semiBold,
+              fontSize: 18,
+              color: COLORS.dark,
+            }}
+          >
+            Hi, {user ? user?.name : 'Guest'}
+          </Text>
+          <Pressable
+            onPress={() => navigation.navigate('Profil')}
+            style={({ pressed }) => [
+              {
+                height: 36,
+                width: 36,
+                borderRadius: 36,
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+              pressed && {
+                backgroundColor: '#eaeaea',
+              },
+            ]}
+          >
+            <Icon
+              name={'person-circle-outline'}
+              size={32}
+              color={COLORS.dark}
+            />
+          </Pressable>
+        </View>
+        <View
+          style={{
+            marginHorizontal: 16,
+            marginBottom: 16,
+            padding: 16,
+            backgroundColor: '#fff',
+            borderRadius: 12,
+            overflow: 'hidden',
+            elevation: 4,
+          }}
+        >
+          <View style={{ marginRight: 80 }}>
+            <Text
               style={{
-                paddingHorizontal: 16,
-                paddingTop: 16,
-                backgroundColor: '#fff',
-                borderTopRightRadius: 12,
-                borderTopLeftRadius: 12,
+                fontFamily: FONTS.semiBold,
+                fontSize: 18,
+                color: COLORS.dark,
+                marginBottom: 6,
               }}
             >
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  marginBottom: 8,
-                }}
-              >
-                <Icon
-                  name="newspaper-outline"
-                  size={18}
-                  color={COLORS.dark}
-                  style={{ marginRight: 8 }}
-                />
+              Screening Thalassemia
+            </Text>
+            <Text
+              style={{
+                fontFamily: FONTS.medium,
+                fontSize: 14,
+                color: COLORS.dark,
+                marginBottom: 10,
+              }}
+            >
+              Mulai screening sekarang juga dengan mudah dan cepat.
+            </Text>
+            <Button
+              onPress={() => navigation.navigate('Screening')}
+              title="Screening"
+              style={{ height: 40, width: 150 }}
+            />
+          </View>
 
+          <View
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
+              right: -80,
+              bottom: -50,
+              zIndex: -99,
+            }}
+          >
+            <Image
+              style={{
+                width: 250,
+                height: 200,
+                resizeMode: 'contain',
+              }}
+              source={require('@assets/images/phone.png')}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            padding: 8,
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            marginVertical: -(gap / 2) + 8,
+            marginHorizontal: -(gap / 2),
+          }}
+        >
+          {menu.map((item, index) => (
+            <View
+              style={{
+                alignItems: 'center',
+                marginHorizontal: gap / 2,
+                minWidth: childWidth,
+                maxWidth: childWidth,
+              }}
+              key={index}
+            >
+              <Pressable
+                onPress={() => navigation.navigate(item.route)}
+                style={({ pressed }) => [
+                  {
+                    height: 64,
+                    width: 64,
+                    borderRadius: 8,
+                    borderColor: COLORS.lightGrey,
+                    backgroundColor: '#f1f1f1',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: 4,
+                    // borderWidth: 1,
+                  },
+                  pressed && {
+                    backgroundColor: '#eaeaea',
+                  },
+                ]}
+              >
+                <Icon name={item.icon} size={32} color={COLORS.primary} />
+              </Pressable>
+              <View style={{ marginBottom: 12, maxWidth: 64 }}>
                 <Text
                   style={{
-                    fontFamily: FONTS.semiBold,
-                    fontSize: 18,
+                    fontFamily: FONTS.medium,
+                    fontSize: 12,
+                    textAlign: 'center',
                     color: COLORS.dark,
                   }}
                 >
-                  Berita Terkini
+                  {item.title}
                 </Text>
               </View>
             </View>
-          </View>
-        }
-        ListFooterComponent={
-          <View
+          ))}
+        </View>
+        <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
+          <Text
             style={{
-              marginBottom: 32,
-            }}
-          />
-        }
-        ListEmptyComponent={
-          <View
-            style={{
-              borderBottomRightRadius: 12,
-              borderBottomLeftRadius: 12,
-              backgroundColor: '#fff',
-              paddingHorizontal: 16,
-              paddingBottom: 16,
+              fontFamily: FONTS.semiBold,
+              fontSize: 18,
+              color: COLORS.dark,
+              marginBottom: 12,
             }}
           >
-            <Text style={{ fontFamily: FONTS.medium, fontSize: 14 }}>
-              Tidak ada data yang tersedia
-            </Text>
-          </View>
-        }
-      />
+            Kenali Thalassemia
+          </Text>
+          <ImageSlider images={news} />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

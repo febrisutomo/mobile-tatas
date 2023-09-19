@@ -1,77 +1,57 @@
 import { View, Image, FlatList, useWindowDimensions } from 'react-native';
 import React, { useRef, useState } from 'react';
 import { COLORS } from '@src/constants';
-import { Pressable } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 
-const Item = ({ item }) => {
-  const width = useWindowDimensions().width;
-  const navigation = useNavigation();
-  return (
-    <Pressable
-      onPress={() =>
-        navigation.navigate('Show News', {
-          news: item,
-          category: item.category.name,
-        })
-      }
-    >
-      <Image
-        key={item.id}
-        style={{
-          width: (width * 3) / 5,
-          backgroundColor: 'gray',
-          borderRadius: 12,
-          height: 400,
-          borderColor: COLORS.lightGrey,
-          borderWidth: 1,
-        }}
-        source={{ uri: 'http://192.168.1.234:8000/storage/' + item.image }}
-      />
-    </Pressable>
-  );
-};
-
-const ImageSlider = ({ images }) => {
+const Carousel = ({ images }) => {
   const width = useWindowDimensions().width;
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef(null);
 
   const handleScroll = (event) => {
-    const offsetX = event.nativeEvent.contentOffset.x;
-    const itemWidth = (width * 3) / 5 + 12;
-    const currentIndex = Math.round(offsetX / itemWidth);
-
-    setActiveIndex(currentIndex);
+    setActiveIndex(Math.round(event.nativeEvent.contentOffset.x / width));
   };
 
   return (
     <View
       style={{
-        marginBottom: 16,
         borderRadius: 12,
         overflow: 'hidden',
+        marginBottom: 16,
       }}
     >
       <FlatList
         ref={flatListRef}
         data={images}
-        renderItem={({ index, item }) => <Item item={item} />}
-        ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
+        renderItem={({ item, index }) => (
+          <Image
+            key={item.id}
+            style={{
+              height: 180,
+              width: width,
+              backgroundColor: 'gray',
+              // height: 180,
+            }}
+            source={{ uri: item.uri }}
+          />
+        )}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index}
         snapToStart={true}
-        snapToInterval={(width * 3) / 5 + 12}
+        snapToInterval={width}
         decelerationRate="fast"
         horizontal
+        // onMomentumScrollEnd={handleScroll}
         onScroll={handleScroll}
       />
 
       <View
         style={{
           flexDirection: 'row',
+          position: 'absolute',
+          bottom: 12,
+          left: 12,
+          justifyContent: 'center',
           alignItems: 'center',
-          paddingVertical: 8,
         }}
       >
         {images.map((data, index) => (
@@ -87,7 +67,7 @@ const ImageSlider = ({ images }) => {
               },
               index === activeIndex && {
                 width: 18,
-                backgroundColor: COLORS.primary,
+                backgroundColor: 'white',
               },
             ]}
           />
@@ -97,4 +77,4 @@ const ImageSlider = ({ images }) => {
   );
 };
 
-export default ImageSlider;
+export default Carousel;

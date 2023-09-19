@@ -3,9 +3,9 @@ import { ActivityIndicator, Text } from 'react-native';
 import { View, SafeAreaView, FlatList, RefreshControl } from 'react-native';
 import NewsItem from '@components/PostItem';
 import { COLORS } from '@src/constants';
-import { useGetNewsInfinite } from '@src/api/postApi';
+import { useGetAgendaInfinite } from '@src/api/postApi';
 
-export default function NewsList({ navigation }) {
+export default function AgendaList({ navigation }) {
   const {
     data,
     isLoading,
@@ -15,7 +15,7 @@ export default function NewsList({ navigation }) {
     hasNextPage,
     isRefetching,
     isFetchingNextPage,
-  } = useGetNewsInfinite();
+  } = useGetAgendaInfinite();
 
   if (isLoading || isRefetching) {
     return (

@@ -6,7 +6,7 @@ import ModalSelect from '@components/ModalSelect';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useCheckEmail, useRegister } from '@src/api/authApi';
+import { useCheckUsername, useRegister } from '@src/api/authApi';
 import {
   useGetProvinces,
   useGetRegenciesByProvinceId,
@@ -22,17 +22,17 @@ import { useNavigation } from '@react-navigation/native';
 import Geolocation from 'react-native-geolocation-service';
 
 const BuatAkun = ({ setStep }) => {
-  const { mutateAsync: checkEmail, isLoading } = useCheckEmail();
+  const { mutateAsync: checkUsername, isLoading } = useCheckUsername();
 
   const { formData } = useSelector((state) => state.registerForm);
 
   const dispatch = useDispatch();
 
   const schema = yup.object().shape({
-    email: yup
+    username: yup
       .string()
-      .email('Email tidak valid')
-      .required('Email tidak boleh kosong'),
+      .matches(/^[a-zA-Z0-9_]+$/, 'Username tidak valid')
+      .required('Username tidak boleh kosong'),
     password: yup
       .string()
       .required('Password tidak boleh kosong')
@@ -51,7 +51,7 @@ const BuatAkun = ({ setStep }) => {
     clearErrors,
   } = useForm({
     defaultValues: {
-      email: formData.email,
+      username: formData.username,
       password: formData.password,
       confirm_password: formData.password,
     },
@@ -62,7 +62,7 @@ const BuatAkun = ({ setStep }) => {
     console.log(data);
     clearErrors();
     try {
-      const response = await checkEmail(data);
+      const response = await checkUsername(data);
       console.log(response);
       dispatch(setFormData(data));
       setStep(2);
@@ -71,7 +71,7 @@ const BuatAkun = ({ setStep }) => {
         error?.response?.data?.message || error.message,
         ToastAndroid.SHORT,
       );
-      setError('email', {
+      setError('username', {
         type: 'unique',
         message: error?.response?.data?.message || error.message,
       });
@@ -89,11 +89,12 @@ const BuatAkun = ({ setStep }) => {
       >
         <Image
           style={{
-            width: 250,
-            height: 180,
-            resizeMode: 'contain',
+            width: 150,
+            height: 150,
+            // resizeMode: 'contain',
           }}
-          source={require('@assets/images/register-red.png')}
+          // source={require('@assets/images/login.png')}
+          source={require('@assets/images/img-placeholder.png')}
         />
       </View>
 
@@ -101,16 +102,15 @@ const BuatAkun = ({ setStep }) => {
         control={control}
         render={({ field: { onChange, value } }) => (
           <TextInput
-            label="Email"
+            label="Username"
             required
-            // keyboardType="email-address"
-            placeholder="Masukkan Email"
+            placeholder="Masukkan Username"
             value={value}
             onChangeText={onChange}
-            error={errors?.email?.message}
+            error={errors?.username?.message}
           />
         )}
-        name="email"
+        name="username"
       />
 
       <Controller

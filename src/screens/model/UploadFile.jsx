@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Alert, ToastAndroid } from 'react-native';
+import { ToastAndroid } from 'react-native';
 import axiosInstance from '@src/api/axiosInstance';
 import DocumentPicker from 'react-native-document-picker';
 import Button from '@components/Button';
@@ -16,10 +16,11 @@ const UploadFileScreen = () => {
   const handlePickDocument = async () => {
     try {
       const result = await DocumentPicker.pickSingle({
-        type: [DocumentPicker.types.allFiles],
+        type: [DocumentPicker.types.xlsx, DocumentPicker.types.xls],
       });
       handleFileUpload(result);
     } catch (err) {
+      console.log('handlePickDocument ~ err:', err);
       if (DocumentPicker.isCancel(err)) {
         // Handle user cancelled the picker
       } else {
@@ -76,7 +77,11 @@ const UploadFileScreen = () => {
       {uploading && (
         <Progress.Bar progress={progress} width={null} color={COLORS.primary} />
       )}
-      <Button title="Import Dataset" onPress={handlePickDocument} />
+      <Button
+        title="Import Dataset"
+        disabled={uploading}
+        onPress={handlePickDocument}
+      />
     </>
   );
 };

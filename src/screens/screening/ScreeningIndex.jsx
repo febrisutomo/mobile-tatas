@@ -9,40 +9,13 @@ import {
 } from 'react-native';
 import { useGetScreeningResult } from '@src/api/screeningApi';
 import { COLORS, FONTS } from '@src/constants';
-import Icon from 'react-native-vector-icons/Ionicons';
 import Alert from '@components/Alert';
 import { useGetProfile } from '@src/api/authApi';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import Button from '@components/Button';
+import Row from '@components/Row';
 
-const Row = ({ label, value }) => {
-  return (
-    <View style={{ flexDirection: 'row' }}>
-      <Text
-        style={{
-          flex: 1,
-          fontSize: 14,
-          fontFamily: FONTS.bold,
-          color: COLORS.dark,
-        }}
-      >
-        {label}
-      </Text>
-      <Text
-        style={{
-          flex: 3,
-          fontSize: 14,
-          fontFamily: FONTS.semiBold,
-          color: COLORS.gray,
-        }}
-      >
-        : {value}
-      </Text>
-    </View>
-  );
-};
-
-export default function Screening({ navigation }) {
+export default function ScreeningIndex({ navigation }) {
   const { data: result, isLoading, error, isError } = useGetScreeningResult();
 
   const { data: user } = useGetProfile();
@@ -67,6 +40,7 @@ export default function Screening({ navigation }) {
   );
 
   if (isLoading) {
+    console.log('loading');
     return (
       <SafeAreaView
         style={{
@@ -81,129 +55,7 @@ export default function Screening({ navigation }) {
 
   if (isError) {
     if (error.response.status === 404) {
-      return (
-        <SafeAreaView
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-            backgroundColor: 'white',
-          }}
-        >
-          <ScrollView style={{ padding: 20 }}>
-            <View style={{ gap: 16, marginBottom: 40 }}>
-              <Alert>Anda belum melakukan screening thalassemia</Alert>
-
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => navigation.navigate('Form Screening')}
-              >
-                <View
-                  style={{
-                    backgroundColor: COLORS.gray,
-                    borderRadius: 12,
-                    marginBottom: 16,
-                    padding: 16,
-                    height: 180,
-                    position: 'relative',
-                  }}
-                >
-                  <View
-                    style={{
-                      height: 100,
-                      width: 100,
-                      borderRadius: 100,
-                      borderColor: 'white',
-                      borderWidth: 4,
-                      // backgroundColor: '#fff',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginBottom: 12,
-                      position: 'absolute',
-                      bottom: 0,
-                      right: 16,
-                      opacity: 0.25,
-                    }}
-                  >
-                    <Icon name="flask-outline" size={64} color={'white'} />
-                  </View>
-
-                  <View style={{ flexDirection: 'row' }}>
-                    <View
-                      style={{
-                        flex: 1,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontFamily: FONTS.bold,
-                          color: 'white',
-                        }}
-                      >
-                        Nama
-                      </Text>
-                    </View>
-
-                    <View style={{ flex: 3 }}>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontFamily: FONTS.semiBold,
-                          color: 'white',
-                        }}
-                      >
-                        : {user?.name}
-                      </Text>
-                    </View>
-                  </View>
-
-                  <View style={{ flexDirection: 'row' }}>
-                    <View
-                      style={{
-                        flex: 1,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontFamily: FONTS.bold,
-                          color: 'white',
-                        }}
-                      >
-                        NIK
-                      </Text>
-                    </View>
-
-                    <View style={{ flex: 3 }}>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontFamily: FONTS.semiBold,
-                          color: 'white',
-                        }}
-                      >
-                        : {user?.nik}
-                      </Text>
-                    </View>
-                  </View>
-                  <Text
-                    style={{
-                      position: 'absolute',
-                      bottom: 16,
-                      left: 16,
-                      fontSize: 14,
-                      fontFamily: FONTS.semiBold,
-                      color: 'white',
-                    }}
-                  >
-                    Screening Sekarang {'>'}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </SafeAreaView>
-      );
+      return navigation.navigate('Form Screening');
     }
   }
 
@@ -216,29 +68,28 @@ export default function Screening({ navigation }) {
       }}
     >
       <ScrollView style={{ padding: 20 }}>
-        <View style={{ gap: 16, marginBottom: 40 }}>
+        <View style={{ gap: 16 }}>
           {result.prediction && (
             <Alert type="danger">
               Hasil screening menunjukkan Anda terindikasi mengidap thalassemia.
-              Kami sarankan Anda untuk segera mengunjungi rumah sakit terdekat
-              untuk pemeriksaan lanjutan.
+              Kami sarankan Anda segera mengunjungi faskes terdekat untuk
+              pemeriksaan lanjutan.
             </Alert>
           )}
 
-          <TouchableOpacity onPress={handlePresentModal}>
+          <TouchableOpacity activeOpacity={0.8} onPress={handlePresentModal}>
             <View
               style={{
                 backgroundColor: result.prediction
                   ? COLORS.red
                   : COLORS.success,
                 borderRadius: 12,
-                marginBottom: 16,
                 padding: 16,
                 height: 180,
                 position: 'relative',
               }}
             >
-              <View
+              {/* <View
                 style={{
                   height: 100,
                   width: 100,
@@ -250,12 +101,12 @@ export default function Screening({ navigation }) {
                   marginBottom: 12,
                   position: 'absolute',
                   bottom: 0,
-                  right: 16,
+                  left: 16,
                   opacity: 0.25,
                 }}
               >
                 <Icon name="flask-outline" size={64} color={'white'} />
-              </View>
+              </View> */}
 
               <View style={{ flexDirection: 'row' }}>
                 <View
@@ -329,6 +180,36 @@ export default function Screening({ navigation }) {
                       color: 'white',
                     }}
                   >
+                    Alamat
+                  </Text>
+                </View>
+
+                <View style={{ flex: 3 }}>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: FONTS.semiBold,
+                      color: 'white',
+                    }}
+                  >
+                    : {user?.district?.name}
+                  </Text>
+                </View>
+              </View>
+
+              <View style={{ flexDirection: 'row' }}>
+                <View
+                  style={{
+                    flex: 1,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontFamily: FONTS.bold,
+                      color: 'white',
+                    }}
+                  >
                     Hasil
                   </Text>
                 </View>
@@ -341,8 +222,12 @@ export default function Screening({ navigation }) {
                       color: 'white',
                     }}
                   >
-                    : {result.prediction ? 'POSITIF' : 'NEGATIF'} ({' '}
-                    {result.probability}%)
+                    :{' '}
+                    {result.dna != null
+                      ? `Terkonfirmasi ${result.dna ? 'Positif' : 'Negatif'}`
+                      : `Kemungkinan ${
+                          result.prediction ? 'Positif' : 'Negatif'
+                        } (${result.probability}%) `}
                   </Text>
                 </View>
               </View>
@@ -351,7 +236,7 @@ export default function Screening({ navigation }) {
                 style={{
                   position: 'absolute',
                   bottom: 16,
-                  left: 16,
+                  right: 16,
                   fontSize: 14,
                   fontFamily: FONTS.semiBold,
                   color: 'white',
@@ -361,6 +246,15 @@ export default function Screening({ navigation }) {
               </Text>
             </View>
           </TouchableOpacity>
+          {result.prediction && (
+            <Button
+              title="Kunjungi Faskes Terdekat"
+              onPress={() => {
+                navigation.navigate('Faskes');
+              }}
+              rightIcon="arrow-forward-outline"
+            />
+          )}
         </View>
       </ScrollView>
 
@@ -372,46 +266,43 @@ export default function Screening({ navigation }) {
         backdropComponent={renderBackdrop}
         // enableHandlePanningGesture={false}
       >
-        <View style={{ padding: 16, paddingTop: 0, marginBottom: 80 }}>
-          <Text
-            style={{
-              fontFamily: FONTS.bold,
-              fontSize: 18,
-              color: COLORS.primary,
-              marginBottom: 16,
-              textAlign: 'center',
-            }}
-          >
-            Detail Screeening
-          </Text>
+        <Text
+          style={{
+            fontFamily: FONTS.bold,
+            fontSize: 18,
+            color: COLORS.primary,
+            marginBottom: 16,
+            textAlign: 'center',
+          }}
+        >
+          Detail Screeening
+        </Text>
+        <ScrollView style={{ padding: 16, paddingTop: 0, marginBottom: 80 }}>
           <View style={{ gap: 8 }}>
             <Row
               label="Tanggal"
-              value={
-                new Date(result.date).toLocaleDateString('id-ID', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                }) +
-                ' ' +
-                new Date(result.date)
-                  .toLocaleTimeString('id-ID', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })
-                  .replace('.', ':')
-              }
+              value={new Date(result.date).toLocaleDateString('id-ID', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
             />
             <Row label="HB" value={`${result.hb} g/dL`} />
             <Row label="MCH" value={`${result.mch} pg`} />
             <Row label="MCV" value={`${result.mcv} fL`} />
             <Row
               label="Prediksi"
-              value={`${result.prediction ? 'POSITIF' : 'NEGATIF'}`}
+              value={result.prediction ? 'POSITIF' : 'NEGATIF'}
             />
             <Row label="Probabilitas" value={`${result.probability}%`} />
+            <Row
+              label="DNA"
+              value={
+                result.dna != null ? (result.dna ? 'Positif' : 'Negatif') : '-'
+              }
+            />
           </View>
-        </View>
+        </ScrollView>
         <View
           style={{
             width: '100%',
@@ -419,11 +310,12 @@ export default function Screening({ navigation }) {
             bottom: 0,
             left: 0,
             padding: 16,
+            gap: 8,
             backgroundColor: 'white',
           }}
         >
           <Button
-            title="Screeening Ulang"
+            title="Screening Ulang"
             onPress={() => {
               bottomSheetModalRef.current?.dismiss();
               navigation.navigate('Form Screening');
