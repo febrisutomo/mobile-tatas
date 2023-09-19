@@ -4,9 +4,9 @@ import { useWindowDimensions } from 'react-native';
 import RenderHTML from 'react-native-render-html';
 import { ScrollView } from 'react-native';
 import { FONTS, COLORS } from '@src/constants';
+import { IMAGE_URL } from '@env';
 
 export default function ShowNews({ route }) {
-  const thumbnailPlacehloder = require('@assets/images/img-placeholder.png');
   const { width } = useWindowDimensions();
   const { news } = route.params;
   return (
@@ -49,7 +49,7 @@ export default function ShowNews({ route }) {
             source={
               news.image
                 ? {
-                    uri: 'http://192.168.1.234:8000/storage/' + news.image,
+                    uri: IMAGE_URL + news.image,
                   }
                 : require('@assets/images/img-placeholder.png')
             }

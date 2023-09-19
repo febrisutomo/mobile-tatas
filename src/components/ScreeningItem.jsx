@@ -2,7 +2,6 @@ import { View, Text, Pressable } from 'react-native';
 import React, { memo } from 'react';
 import { FONTS, COLORS } from '@src/constants';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 const ScreeningItem = ({ item, onPress, hideName = false }) => {
   return (
