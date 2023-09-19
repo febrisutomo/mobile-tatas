@@ -89,12 +89,11 @@ const BuatAkun = ({ setStep }) => {
       >
         <Image
           style={{
-            width: 150,
-            height: 150,
-            // resizeMode: 'contain',
+            width: 250,
+            height: 200,
+            resizeMode: 'contain',
           }}
-          // source={require('@assets/images/login.png')}
-          source={require('@assets/images/img-placeholder.png')}
+          source={require('@assets/images/login.png')}
         />
       </View>
 

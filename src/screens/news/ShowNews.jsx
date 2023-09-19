@@ -51,9 +51,9 @@ export default function ShowNews({ route }) {
                 ? {
                     uri: IMAGE_URL + news.image,
                   }
-                : require('@assets/images/img-placeholder.png')
+                : require('@assets/images/img-placeholder.jpg')
             }
-            defaultSource={require('@assets/images/img-placeholder.png')}
+            defaultSource={require('@assets/images/img-placeholder.jpg')}
             style={{
               flex: 1, // This makes the image expand to fill the parent View's height
               borderRadius: 12,

@@ -4,7 +4,7 @@ import { FONTS, COLORS } from '@src/constants';
 import { IMAGE_URL } from '@env';
 
 function PostItem({ navigation, item, style }) {
-  const thumbnailPlacehloder = require('@assets/images/img-placeholder.png');
+  const thumbnailPlacehloder = require('@assets/images/img-placeholder.jpg');
 
   // const getDateDiffString = (date) => {
   //   const today = new Date();

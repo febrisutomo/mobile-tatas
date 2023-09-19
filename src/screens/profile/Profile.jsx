@@ -3,7 +3,6 @@ import React, { useRef, useCallback } from 'react';
 import Button from '@components/Button';
 import { COLORS, FONTS } from '@src/constants';
 import Icon from 'react-native-vector-icons/Ionicons';
-import FA6 from 'react-native-vector-icons/FontAwesome6';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import { useDispatch } from 'react-redux';
