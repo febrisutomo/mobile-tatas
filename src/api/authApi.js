@@ -4,13 +4,14 @@ import {
   setAccessToken,
   setLoggedIn,
   setRefreshToken,
+  setUser,
 } from '@src/redux/slice/authSlice';
 import axiosInstance from '@src/api/axiosInstance';
 
-export const useCheckEmail = () => {
+export const useCheckUsername = () => {
   return useMutation({
     mutationFn: async (data) => {
-      const response = await axiosInstance.post('/auth/check-email', data);
+      const response = await axiosInstance.post('/auth/check-username', data);
       return response.data;
     },
     onError: (error) => {
@@ -52,26 +53,26 @@ export const useLogin = () => {
   });
 };
 
-export const useGoogleLogin = () => {
-  return useMutation({
-    mutationFn: async (data) => {
-      const response = await axiosInstance.post('/auth/google-login', data);
-      return response.data;
-    },
-    onSuccess: (data) => {
-      store.dispatch(setAccessToken(data.access_token));
-      store.dispatch(setRefreshToken(data.refresh_token));
-      store.dispatch(setLoggedIn(JSON.stringify(true)));
-    },
-    onError: (error) => {
-      if (error?.response?.data?.message) {
-        console.log('error', error.response.data.message);
-      } else {
-        console.log('error', error);
-      }
-    },
-  });
-};
+// export const useGoogleLogin = () => {
+//   return useMutation({
+//     mutationFn: async (data) => {
+//       const response = await axiosInstance.post('/auth/google-login', data);
+//       return response.data;
+//     },
+//     onSuccess: (data) => {
+//       store.dispatch(setAccessToken(data.access_token));
+//       store.dispatch(setRefreshToken(data.refresh_token));
+//       store.dispatch(setLoggedIn(JSON.stringify(true)));
+//     },
+//     onError: (error) => {
+//       if (error?.response?.data?.message) {
+//         console.log('error', error.response.data.message);
+//       } else {
+//         console.log('error', error);
+//       }
+//     },
+//   });
+// };
 
 export const useGetProfile = () => {
   return useQuery({
@@ -81,6 +82,9 @@ export const useGetProfile = () => {
       return response.data;
     },
     select: (data) => data.user,
+    onSuccess: (data) => {
+      store.dispatch(setUser(data));
+    },
   });
 };
 

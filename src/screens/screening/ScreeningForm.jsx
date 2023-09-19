@@ -111,7 +111,7 @@ export default function ScreeningForm({ navigation }) {
         }}
       >
         <Button
-          title="Submit Data"
+          title="Diagnosa"
           onPress={handleSubmit(onSubmit)}
           isLoading={isLoading}
         />

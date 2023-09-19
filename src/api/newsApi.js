@@ -38,7 +38,7 @@ const getNews = async ({ pageParam = 1 }) => {
       id: page.id,
       title: page.title.rendered,
       content: page.content.rendered,
-      AUTHOR: { name: 'Kemenkes' },
+      author: { name: 'Kemenkes' },
       category: { name: 'Talasemia' },
       thumbnail:
         page._embedded['wp:featuredmedia'][0]?.media_details?.sizes?.medium

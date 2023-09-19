@@ -2,8 +2,9 @@ import { View, Text, Pressable } from 'react-native';
 import React, { memo } from 'react';
 import { FONTS, COLORS } from '@src/constants';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
-const ScreeningItem = ({ item, onPress }) => {
+const ScreeningItem = ({ item, onPress, hideName = false }) => {
   return (
     <Pressable
       style={({ pressed }) => [
@@ -12,7 +13,6 @@ const ScreeningItem = ({ item, onPress }) => {
           backgroundColor: pressed ? '#f1f1f1' : 'white',
           elevation: 4,
           padding: 8,
-          height: 80,
           // borderColor: COLORS.lightGrey,
           borderRadius: 12,
         },
@@ -22,7 +22,14 @@ const ScreeningItem = ({ item, onPress }) => {
       <View
         style={{
           flex: 1,
-          backgroundColor: item.prediction ? COLORS.danger : COLORS.success,
+          backgroundColor:
+            item.dna != null
+              ? item.dna
+                ? COLORS.danger
+                : COLORS.success
+              : item.prediction
+              ? COLORS.danger
+              : COLORS.success,
           borderRadius: 12,
           marginRight: 16,
           justifyContent: 'center',
@@ -32,45 +39,63 @@ const ScreeningItem = ({ item, onPress }) => {
         <Icon name="flask-outline" size={32} color="white" />
       </View>
       <View style={{ flex: 4 }}>
-        <Text
+        <View
           style={{
-            fontSize: 10,
-            fontFamily: FONTS.semiBold,
-            color: COLORS.gray,
-            marginBottom: 4,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
           }}
         >
-          {new Date(item.date).toLocaleDateString('id-ID', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
-          {' •  Pukul '}
-          {new Date(item.date).toLocaleTimeString('id-ID', {
-            hour: '2-digit',
-            minute: '2-digit',
-          })}
-        </Text>
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: FONTS.semiBold,
-            marginBottom: 4,
-            color: COLORS.dark,
-          }}
-        >
-          Prediksi: {item.prediction ? 'POSITIF' : 'NEGATIF'}
-        </Text>
-        <Text
-          style={{
-            fontSize: 14,
-            fontFamily: FONTS.semiBold,
-            color: COLORS.dark,
-            marginBottom: 4,
-          }}
-        >
-          Probabilitas: {item.probability}%
-        </Text>
+          <View>
+            <Text
+              style={{
+                fontSize: 10,
+                fontFamily: FONTS.semiBold,
+                color: COLORS.gray,
+                marginBottom: 4,
+              }}
+            >
+              {new Date(item.date).toLocaleDateString('id-ID', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+              {' •  Pukul '}
+              {new Date(item.date).toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+            </Text>
+            {hideName === false && (
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontFamily: FONTS.semiBold,
+                  marginBottom: 4,
+                  color: COLORS.dark,
+                }}
+              >
+                {item?.user?.name}
+              </Text>
+            )}
+
+            <Text
+              style={{
+                fontSize: 14,
+                fontFamily: FONTS.semiBold,
+                marginBottom: 4,
+                color: COLORS.dark,
+              }}
+            >
+              {item.dna != null
+                ? `Terkonfirmasi ${item.dna ? 'Positif' : 'Negatif'}`
+                : `Kemungkinan ${item.prediction ? 'Positif' : 'Negatif'} (${
+                    item.probability
+                  }%) `}
+            </Text>
+          </View>
+          <Icon name="chevron-forward" size={16} color={COLORS.primary} />
+        </View>
       </View>
     </Pressable>
   );

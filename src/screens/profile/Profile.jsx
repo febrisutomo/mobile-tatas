@@ -10,28 +10,34 @@ import { useDispatch } from 'react-redux';
 import { logout } from '@src/redux/slice/authSlice';
 import { useGetProfile } from '@src/api/authApi';
 import Alert from '@components/Alert';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function Profile({ navigation }) {
   const { data: user } = useGetProfile();
-
+  console.log('Profile ~ user:', user);
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(logout());
+    queryClient.invalidateQueries({
+      queryKey: ['profile'],
+    });
+    navigation.navigate('Home');
+  };
 
   const data = [
     {
       title: 'Ubah Profil',
-      icon: 'user-pen',
+      icon: 'person',
       route: 'Ubah Profil',
     },
     {
       title: 'Ubah Password',
-      icon: 'lock',
+      icon: 'lock-closed',
       route: 'Ubah Password',
     },
-    {
-      title: 'Model',
-      icon: 'database',
-      route: 'Model',
-    },
+
     // {
     //   title: 'Kebijakan dan Ketentuan',
     //   icon: 'shield-checkmark',
@@ -43,6 +49,14 @@ export default function Profile({ navigation }) {
     //   route: 'Edit Profile',
     // },
   ];
+
+  // if (user?.role?.name === 'Admin') {
+  //   data.push({
+  //     title: 'Model',
+  //     icon: 'server',
+  //     route: 'Model',
+  //   });
+  // }
 
   const bottomSheetModalRef = useRef(null);
 
@@ -65,7 +79,7 @@ export default function Profile({ navigation }) {
 
   const renderModalFooter = () => (
     <View style={{ paddingTop: 16, paddingHorizontal: 16 }}>
-      <Button title="Ya, Keluar Sekarang" onPress={() => dispatch(logout())} />
+      <Button title="Ya, Keluar Sekarang" onPress={handleLogout} />
       <Button
         title="Batal Keluar"
         style={{ backgroundColor: '#fff' }}
@@ -93,7 +107,9 @@ export default function Profile({ navigation }) {
           }}
         >
           <Image
-            source={require('@assets/images/default-profile-picture.png')}
+            source={{
+              uri: `https://ui-avatars.com/api/?name=${user?.name}&background=dc2626&color=fff`,
+            }}
             style={{
               height: 64,
               width: 64,
@@ -164,7 +180,7 @@ export default function Profile({ navigation }) {
                     borderRadius: 100,
                   }}
                 >
-                  <FA6 name={item.icon} size={20} color={COLORS.primary} />
+                  <Icon name={item.icon} size={20} color={COLORS.primary} />
                 </View>
 
                 <Text

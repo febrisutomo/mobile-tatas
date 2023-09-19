@@ -10,36 +10,10 @@ import {
 import ScreeningItem from '@components/ScreeningItem';
 import { FONTS, COLORS } from '@src/constants';
 import { BottomSheetModal, BottomSheetBackdrop } from '@gorhom/bottom-sheet';
-import { useGetScreeningsInfinite } from '@src/api/screeningApi';
+import { useGetScreeningHistoryInfinite } from '@src/api/screeningApi';
+import Row from '@components/Row';
 
-const Row = ({ label, value }) => {
-  return (
-    <View style={{ flexDirection: 'row' }}>
-      <Text
-        style={{
-          flex: 1,
-          fontSize: 14,
-          fontFamily: FONTS.bold,
-          color: COLORS.dark,
-        }}
-      >
-        {label}
-      </Text>
-      <Text
-        style={{
-          flex: 3,
-          fontSize: 14,
-          fontFamily: FONTS.semiBold,
-          color: COLORS.gray,
-        }}
-      >
-        : {value}
-      </Text>
-    </View>
-  );
-};
-
-export default function ScreeningList({ navigation }) {
+export default function ScreeningHistory({ navigation }) {
   const [selected, setSelected] = useState(null);
 
   const {
@@ -51,7 +25,7 @@ export default function ScreeningList({ navigation }) {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetScreeningsInfinite();
+  } = useGetScreeningHistoryInfinite();
 
   const bottomSheetModalRef = useRef(null);
 
@@ -155,6 +129,7 @@ export default function ScreeningList({ navigation }) {
               item={item}
               navigation={navigation}
               onPress={handlePresentModal}
+              hideName
             />
           )}
           ItemSeparatorComponent={<View style={{ marginBottom: 16 }} />}
@@ -199,27 +174,28 @@ export default function ScreeningList({ navigation }) {
                 textAlign: 'center',
               }}
             >
-              Detail Skrining
+              Detail
             </Text>
-            <View style={{ gap: 12 }}>
+            <View style={{ gap: 8 }}>
               <Row
                 label="Tanggal"
-                value={
-                  new Date(selected.date).toLocaleDateString('id-ID', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  }) +
-                  ' ' +
-                  new Date(selected.date).toLocaleTimeString('id-ID', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })
-                }
+                value={new Date(selected.date).toLocaleDateString('id-ID', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              />
+              <Row
+                label="Jam"
+                value={new Date(selected.date).toLocaleTimeString('id-ID', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
               />
               <Row label="HB" value={`${selected.hb} g/dL`} />
               <Row label="MCH" value={`${selected.mch} pg`} />
               <Row label="MCV" value={`${selected.mcv} fL`} />
+
               <Row
                 label="Prediksi"
                 value={`${selected.prediction ? 'POSITIF' : 'NEGATIF'}`}

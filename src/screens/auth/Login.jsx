@@ -20,10 +20,7 @@ export default function Login({ navigation }) {
   const { mutateAsync: login, isLoading } = useLogin();
 
   const schema = yup.object().shape({
-    email: yup
-      .string()
-      .email('Email tidak valid')
-      .required('Email tidak boleh kosong'),
+    username: yup.string().required('Username tidak boleh kosong'),
     password: yup.string().required('Password tidak boleh kosong'),
   });
 
@@ -33,7 +30,7 @@ export default function Login({ navigation }) {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: '',
+      username: '',
       password: '',
     },
     resolver: yupResolver(schema),
@@ -79,7 +76,7 @@ export default function Login({ navigation }) {
               height: 200,
               resizeMode: 'contain',
             }}
-            source={require('@assets/images/login-red.png')}
+            source={require('@assets/images/login.png')}
           />
         </View>
         <Text
@@ -98,16 +95,15 @@ export default function Login({ navigation }) {
             control={control}
             render={({ field: { onChange, value } }) => (
               <TextInput
-                label="Email"
+                label="Username"
                 required
-                keyboardType="email-address"
-                placeholder="Masukkan Email"
+                placeholder="Masukkan Username"
                 value={value}
                 onChangeText={onChange}
-                error={errors?.email?.message}
+                error={errors?.username?.message}
               />
             )}
-            name="email"
+            name="username"
           />
 
           <Controller

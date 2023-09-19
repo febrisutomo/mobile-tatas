@@ -6,9 +6,17 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
-import { Text, Pressable, View, PermissionsAndroid } from 'react-native';
+import {
+  Text,
+  Pressable,
+  View,
+  PermissionsAndroid,
+  Linking,
+} from 'react-native';
 import { COLORS, FONTS } from '@src/constants';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
+import Icon from 'react-native-vector-icons/Ionicons';
+import ModalSelect from '@components/ModalSelect';
 
 MapboxGL.setAccessToken(
   'pk.eyJ1IjoiZmVicmlzb2V0IiwiYSI6ImNrdm0zMDFoa2RrajMzMnE2bHdmZ3Nlc2gifQ.xEhvQMKMtB_g-5QeasQ-jw',
@@ -46,6 +54,7 @@ const locationsApi = [
       'Jl. Rumah Sakit No.1, Karangpucung, Kejawar, Kec. Banyumas, Kabupaten Banyumas, Jawa Tengah 53192',
     phone: '(0281) 796031',
     coordinates: '-7.529621357095523, 109.2923916796076',
+    type: 'Rumah Sakit',
   },
   {
     id: 2,
@@ -54,6 +63,7 @@ const locationsApi = [
       'Jl. Pramuka No.55, Mruyung, Sudagaran, Kec. Banyumas, Kabupaten Banyumas, Jawa Tengah 53192',
     phone: '(0281) 796645',
     coordinates: '-7.524962494298697, 109.29355031961433',
+    type: 'Rumah Sakit',
   },
   {
     id: 3,
@@ -62,6 +72,7 @@ const locationsApi = [
       'Jl. Menteri Supeno No.25, Dusun I Wiradadi, Wiradadi, Kec. Sokaraja, Kabupaten Banyumas, Jawa Tengah 53181',
     phone: '(0281) 6846225',
     coordinates: '-7.4583297669642885, 109.27196758000761',
+    type: 'Rumah Sakit',
   },
   {
     id: 4,
@@ -70,6 +81,25 @@ const locationsApi = [
       'Jl. Dr. Gumbreg No.1, Kebontebu, Berkoh, Kec. Purwokerto Sel., Kabupaten Banyumas, Jawa Tengah 53146',
     phone: '(0281) 632708',
     coordinates: '-7.436033001935134, 109.26741183275088',
+    type: 'Rumah Sakit',
+  },
+  {
+    id: 5,
+    name: 'Puskesmas Kalibagor',
+    address:
+      'Jl. Suwarjono No.48, Dusun II Kalibagor, Kalibagor, Kec. Kalibagor, Kabupaten Banyumas, Jawa Tengah 53182',
+    phone: '(0281) 6438207',
+    coordinates: '-7.472995261072819, 109.2974894',
+    type: 'Puskesmas',
+  },
+  {
+    id: 6,
+    name: 'Puskesmas Banyumas',
+    address:
+      'Jl. Gatot Subroto No.181, Banyumas, Sudagaran, Kec. Banyumas, Kabupaten Banyumas, Jawa Tengah 53192',
+    phone: '(0281) 796300',
+    coordinates: '-7.516295142056291, 109.295958153417444',
+    type: 'Puskesmas',
   },
 ];
 
@@ -102,11 +132,9 @@ const ListItem = ({ item, camera, bottomSheet, onClick }) => {
     <Pressable
       style={({ pressed }) => [
         {
-          flexDirection: 'row',
           backgroundColor: pressed ? '#f1f1f1' : 'white',
           elevation: 4,
           padding: 8,
-          height: 100,
           // borderColor: COLORS.lightGrey,
           borderRadius: 12,
         },
@@ -123,55 +151,177 @@ const ListItem = ({ item, camera, bottomSheet, onClick }) => {
     >
       <View
         style={{
-          flex: 1,
-          backgroundColor: COLORS.primary,
-          borderRadius: 12,
-          marginRight: 16,
-          justifyContent: 'center',
+          flexDirection: 'row',
+          gap: 8,
+          marginBottom: 8,
           alignItems: 'center',
         }}
       >
-        <Text
+        <View style={{ flex: 3 }}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontFamily: FONTS.semiBold,
+              color: COLORS.dark,
+            }}
+          >
+            {item.properties.name}
+          </Text>
+        </View>
+        <View
           style={{
-            fontSize: 12,
-            fontFamily: FONTS.semiBold,
-            color: 'white',
+            flex: 1,
+            backgroundColor: COLORS.gray,
+            borderRadius: 12,
+            padding: 4,
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
-          {item.properties.distance.toFixed(2)} Km
-        </Text>
+          <Text
+            style={{
+              fontSize: 12,
+              fontFamily: FONTS.semiBold,
+              color: 'white',
+            }}
+          >
+            {item.properties.distance.toFixed(2)} Km
+          </Text>
+        </View>
       </View>
-      <View style={{ flex: 3 }}>
+
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ width: 20 }}>
+          <Icon name={'home-outline'} size={14} color={COLORS.dark} />
+        </View>
         <Text
           style={{
-            fontSize: 16,
+            fontSize: 14,
             fontFamily: FONTS.semiBold,
-            marginBottom: 4,
             color: COLORS.dark,
           }}
+          numberOfLines={1}
         >
-          {item.properties.name}
+          Alamat
         </Text>
+      </View>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text
           style={{
-            fontSize: 12,
+            fontSize: 14,
             fontFamily: FONTS.medium,
             marginBottom: 4,
+            marginLeft: 20,
+            color: COLORS.dark,
           }}
-          numberOfLines={2}
+          numberOfLines={1}
         >
           {item.properties.address}
         </Text>
+      </View>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ width: 20 }}>
+          <Icon name={'call-outline'} size={14} color={COLORS.dark} />
+        </View>
         <Text
           style={{
-            fontSize: 12,
+            fontSize: 14,
+            fontFamily: FONTS.semiBold,
+            color: COLORS.dark,
+          }}
+          numberOfLines={1}
+        >
+          Telepon
+        </Text>
+      </View>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text
+          style={{
+            fontSize: 14,
             fontFamily: FONTS.medium,
             marginBottom: 4,
+            marginLeft: 20,
+            color: COLORS.dark,
           }}
-          numberOfLines={2}
+          numberOfLines={1}
         >
           {item.properties.phone}
         </Text>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 8,
+          marginTop: 8,
+          justifyContent: 'space-between',
+        }}
+      >
+        <Pressable
+          onPress={() => Linking.openURL(`tel:${item.properties.phone}`)}
+          android_ripple={{ color: 'white' }}
+          style={[
+            {
+              paddingVertical: 8,
+              flex: 1,
+              backgroundColor: COLORS.primary,
+              borderRadius: 8,
+              flexDirection: 'row',
+              gap: 8,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+          ]}
+        >
+          <Icon name={'call-outline'} size={18} color="#fff" />
+          <Text
+            style={[
+              {
+                fontFamily: FONTS.semiBold,
+                color: 'white',
+                textAlign: 'center',
+                fontSize: 16,
+              },
+            ]}
+          >
+            Hubungi
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={() =>
+            Linking.openURL(
+              `geo:${item.geometry.coordinates.reverse().join(',')}?q=${
+                item.properties.name
+              }`,
+            )
+          }
+          android_ripple={{ color: 'white' }}
+          style={[
+            {
+              paddingVertical: 8,
+              flex: 1,
+              backgroundColor: COLORS.primary,
+              borderRadius: 8,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              gap: 8,
+              alignItems: 'center',
+            },
+          ]}
+        >
+          <Icon name={'map-outline'} size={18} color="#fff" />
+          <Text
+            style={[
+              {
+                fontFamily: FONTS.semiBold,
+                color: 'white',
+                textAlign: 'center',
+                fontSize: 16,
+              },
+            ]}
+          >
+            Map
+          </Text>
+        </Pressable>
       </View>
     </Pressable>
   );
@@ -182,7 +332,13 @@ export default function Maps() {
     '-7.40391162312597, 109.24623016426392',
   );
 
-  const [locations, setLocations] = useState(locationsApi);
+  const [locations, setLocations] = useState([]);
+
+  const [type, setType] = useState('Rumah Sakit');
+
+  useEffect(() => {
+    setLocations(locationsApi.filter((location) => location.type === type));
+  }, [type]);
 
   const bottomSheetRef = useRef(null);
 
@@ -258,15 +414,13 @@ export default function Maps() {
       };
     });
     setFeatureCollection({ type: 'FeatureCollection', features });
-    console.log(features[0].geometry?.coordinates);
+    console.log(features[0]?.geometry?.coordinates);
     camera.current?.setCamera({
-      centerCoordinate: features[0].geometry?.coordinates,
+      centerCoordinate: features[0]?.geometry?.coordinates,
       animationDuration: 500,
       zoomLevel: 14,
     });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userCoordinates]);
+  }, [locations, userCoordinates]);
 
   const camera = useRef(null);
 
@@ -317,7 +471,10 @@ export default function Maps() {
           onPress={onPinPress}
         >
           <MapboxGL.Images
-            images={{ hospital: require('@assets/images/hospital.png') }}
+            images={{
+              hospital: require('@assets/images/medical-red.png'),
+              puskesmas: require('@assets/images/medical-green.png'),
+            }}
           />
           <MapboxGL.SymbolLayer
             id="mapPinsLayer"
@@ -325,7 +482,7 @@ export default function Maps() {
               iconAllowOverlap: true,
               iconAnchor: 'bottom',
               iconSize: 1.0,
-              iconImage: 'hospital',
+              iconImage: type === 'Rumah Sakit' ? 'hospital' : 'puskesmas',
             }}
           />
         </MapboxGL.ShapeSource>
@@ -345,18 +502,20 @@ export default function Maps() {
         snapPoints={snapPoints}
         onChange={handleSheetChanges}
       >
-        <View style={{ flex: 1 }}>
-          <Text
-            style={{
-              fontFamily: FONTS.bold,
-              fontSize: 18,
-              color: COLORS.primary,
-              marginBottom: 16,
-              textAlign: 'center',
-            }}
-          >
-            Rumah Sakit
-          </Text>
+        <View style={{ flex: 1, backgroundColor: '#f1f1f1' }}>
+          <View style={{ padding: 16 }}>
+            <ModalSelect
+              placeholder="Pilih Jenis Faskes"
+              height={40}
+              value={type}
+              onChange={setType}
+              options={[
+                { label: 'Rumah Sakit', value: 'Rumah Sakit' },
+                { label: 'Puskesmas', value: 'Puskesmas' },
+              ]}
+            />
+          </View>
+
           <BottomSheetFlatList
             data={featureCollection.features}
             renderItem={({ item }) => (
