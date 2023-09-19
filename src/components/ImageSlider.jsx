@@ -32,6 +32,8 @@ const Item = ({ item }) => {
   );
 };
 
+const Separator = () => <View style={{ width: 12 }} />;
+
 const ImageSlider = ({ images }) => {
   const width = useWindowDimensions().width;
   const [activeIndex, setActiveIndex] = useState(0);
@@ -57,7 +59,7 @@ const ImageSlider = ({ images }) => {
         ref={flatListRef}
         data={images}
         renderItem={({ index, item }) => <Item item={item} />}
-        ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
+        ItemSeparatorComponent={Separator}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index}
         snapToStart={true}

@@ -2,7 +2,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { FONTS } from '@src/constants';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import HomeTabs from './HomeTab';
 import EditProfile from '@src/screens/profile/EditProfile';
 import ChangePassword from '@src/screens/profile/ChangePassword';
 import ShowNews from '@src/screens/news/ShowNews';
