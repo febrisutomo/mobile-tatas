@@ -211,7 +211,11 @@ export default function Model({ navigation }) {
             backgroundColor: 'white',
           }}
         >
-          <Button title="Simpan" onPress={handleSubmit(onSubmit)} />
+          <Button
+            title="Simpan"
+            onPress={handleSubmit(onSubmit)}
+            isLoading={generatingModel}
+          />
         </View>
       </BottomSheetModal>
     </SafeAreaView>

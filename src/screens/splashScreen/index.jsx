@@ -1,4 +1,4 @@
-import { Text, SafeAreaView, ActivityIndicator, StatusBar } from 'react-native';
+import { Text, SafeAreaView, StatusBar } from 'react-native';
 import React from 'react';
 import { COLORS, FONTS } from '@src/constants';
 
@@ -38,11 +38,6 @@ export default function SplashScreen() {
       >
         Thalassemia Tracking Application System
       </Text>
-      {/* <ActivityIndicator
-        size="large"
-        color={COLORS.primary}
-        style={{ position: 'absolute', bottom: 32 }}
-      /> */}
     </SafeAreaView>
   );
 }
