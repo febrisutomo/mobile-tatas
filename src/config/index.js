@@ -1,0 +1,2 @@
+export const API_URL = 'http://103.134.154.86:8000/api/v1';
+export const STORAGE_URL = 'http://103.134.154.86/';

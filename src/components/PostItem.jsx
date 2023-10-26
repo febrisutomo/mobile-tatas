@@ -1,7 +1,7 @@
 import { View, Text, Image, Pressable } from 'react-native';
 import React, { memo } from 'react';
 import { FONTS, COLORS } from '@src/constants';
-import { IMAGE_URL } from '@env';
+import { STORAGE_URL } from '@src/config';
 
 function PostItem({ navigation, item, style }) {
   const thumbnailPlacehloder = require('@assets/images/img-placeholder.jpg');
@@ -78,7 +78,7 @@ function PostItem({ navigation, item, style }) {
           source={
             item.image
               ? {
-                  uri: IMAGE_URL + item.image,
+                  uri: STORAGE_URL + item.image,
                 }
               : thumbnailPlacehloder
           }

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import store from '@src/redux/store';
 import { setAccessToken, logout } from '@src/redux/slice/authSlice';
-import { API_URL } from '@env';
+import { API_URL } from '@src/config';
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
@@ -35,15 +35,11 @@ axiosInstance.interceptors.response.use(
       try {
         const { refreshToken } = store.getState().authSlice;
         // Make a request to refresh the token
-        const response = await axios.post(
-          API_URL + '/auth/refresh-token',
-          null,
-          {
-            headers: {
-              Authorization: `Bearer ${refreshToken}`,
-            },
+        const response = await axios.post(+'/auth/refresh-token', null, {
+          headers: {
+            Authorization: `Bearer ${refreshToken}`,
           },
-        );
+        });
 
         const { access_token } = response.data;
 

@@ -15,8 +15,8 @@ import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import Button from '@components/Button';
 import Row from '@components/Row';
 
-export default function ScreeningIndex({ navigation }) {
-  const { data: result, isLoading, error, isError } = useGetScreeningResult();
+export default function ScreeeningResult({ navigation }) {
+  const { data: result, isLoading, isError } = useGetScreeningResult();
 
   const { data: user } = useGetProfile();
 
@@ -54,9 +54,9 @@ export default function ScreeningIndex({ navigation }) {
   }
 
   if (isError) {
-    if (error.response.status === 404) {
-      return navigation.navigate('Form Screening');
-    }
+    // if (error.response.status === 404) {
+    return navigation.replace('Form Screening');
+    // }
   }
 
   return (
@@ -70,10 +70,10 @@ export default function ScreeningIndex({ navigation }) {
       <ScrollView style={{ padding: 20 }}>
         <View style={{ gap: 16 }}>
           {result.prediction && (
-            <Alert type="danger">
+            <Alert type="info">
               Hasil screening menunjukkan Anda terindikasi mengidap thalassemia.
-              Kami sarankan Anda segera mengunjungi faskes terdekat untuk
-              pemeriksaan lanjutan.
+              Segera lakukan tes Hemoglobin Elektroforensi untuk pemeriksaan
+              lanjutan.
             </Alert>
           )}
 
@@ -89,25 +89,6 @@ export default function ScreeningIndex({ navigation }) {
                 position: 'relative',
               }}
             >
-              {/* <View
-                style={{
-                  height: 100,
-                  width: 100,
-                  borderRadius: 100,
-                  borderColor: 'white',
-                  borderWidth: 4,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: 12,
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 16,
-                  opacity: 0.25,
-                }}
-              >
-                <Icon name="flask-outline" size={64} color={'white'} />
-              </View> */}
-
               <View style={{ flexDirection: 'row' }}>
                 <View
                   style={{
@@ -261,7 +242,7 @@ export default function ScreeningIndex({ navigation }) {
       <BottomSheetModal
         ref={bottomSheetModalRef}
         index={0}
-        snapPoints={['50%']}
+        snapPoints={['75%']}
         onChange={handleSheetChanges}
         backdropComponent={renderBackdrop}
         // enableHandlePanningGesture={false}
@@ -287,16 +268,19 @@ export default function ScreeningIndex({ navigation }) {
                 day: 'numeric',
               })}
             />
-            <Row label="HB" value={`${result.hb} g/dL`} />
-            <Row label="MCH" value={`${result.mch} pg`} />
+            <Row label="Hb" value={`${result.hb} g/dL`} />
             <Row label="MCV" value={`${result.mcv} fL`} />
+            <Row label="MCH" value={`${result.mch} pg`} />
             <Row
               label="Prediksi"
               value={result.prediction ? 'POSITIF' : 'NEGATIF'}
             />
             <Row label="Probabilitas" value={`${result.probability}%`} />
+            <Row label="Hb A" value={`${result.hb_a ?? '-'} %`} />
+            <Row label="Hb F" value={`${result.hb_f ?? '-'} %`} />
+            <Row label="Hb A2" value={`${result.hb_a2 ?? '-'} %`} />
             <Row
-              label="DNA"
+              label="Hasil"
               value={
                 result.dna != null ? (result.dna ? 'Positif' : 'Negatif') : '-'
               }
@@ -314,6 +298,13 @@ export default function ScreeningIndex({ navigation }) {
             backgroundColor: 'white',
           }}
         >
+          <Button
+            title="Masukkan Hb Elfo"
+            onPress={() => {
+              bottomSheetModalRef.current?.dismiss();
+              navigation.navigate('Form Hb Elfo', { screening: result });
+            }}
+          />
           <Button
             title="Screening Ulang"
             onPress={() => {

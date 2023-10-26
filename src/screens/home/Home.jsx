@@ -52,25 +52,29 @@ export default function Home({ navigation }) {
         icon: 'map-outline',
         route: 'Faskes',
       },
-      {
-        title: 'Konfirmasi DNA',
-        icon: 'shield-checkmark-outline',
-        route: 'Konfirmasi DNA',
-      },
-      {
-        title: 'Model Prediksi',
-        icon: 'server-outline',
-        route: 'Model',
-      },
+      // {
+      //   title: 'Model Prediksi',
+      //   icon: 'server-outline',
+      //   route: 'Model',
+      // },
     ];
-    if (user?.role?.name === 'Admin') {
-      setMenu(mn);
-    } else {
-      setMenu(mn.slice(0, 4));
+    if (user?.role?.name === 'Dokter') {
+      mn[0] = {
+        title: 'Konfirmasi Screening',
+        icon: 'shield-checkmark-outline',
+        route: 'Konfirmasi Screening',
+      };
+    } else if (user?.role?.name === 'Admin') {
+      mn[0] = {
+        title: 'Kelola Model',
+        icon: 'server-outline',
+        route: 'Manajemen Model',
+      };
     }
+    setMenu(mn);
   }, [user]);
 
-  const { data: news = [] } = useGetStaticPosts();
+  const { data: news = [], isLoading } = useGetStaticPosts();
 
   return (
     <SafeAreaView
@@ -104,7 +108,7 @@ export default function Home({ navigation }) {
             Hi, {user ? user?.name : 'Guest'}
           </Text>
           <Pressable
-            onPress={() => navigation.navigate('Profil')}
+            onPress={() => navigation.navigate('Akun')}
             style={({ pressed }) => [
               {
                 height: 36,
@@ -251,7 +255,7 @@ export default function Home({ navigation }) {
           >
             Kenali Thalassemia
           </Text>
-          <ImageSlider images={news} />
+          <ImageSlider images={news} isLoading={isLoading} />
         </View>
       </ScrollView>
     </SafeAreaView>

@@ -2,10 +2,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { FONTS } from '@src/constants';
 import React from 'react';
 import { useSelector } from 'react-redux';
-import EditProfile from '@src/screens/profile/EditProfile';
-import ChangePassword from '@src/screens/profile/ChangePassword';
+import EditProfile from '@src/screens/account/EditProfile';
+import ChangePassword from '@src/screens/account/ChangePassword';
 import ShowNews from '@src/screens/news/ShowNews';
-import Screening from '@src/screens/screening/ScreeningIndex';
+import Screening from '@src/screens/screening/ScreeningResult';
 import Login from '@src/screens/auth/Login';
 import Faskes from '@src/screens/faskes/Faskes';
 import Register from '@src/screens/auth/Register';
@@ -16,10 +16,16 @@ import ScreeningForm from '@src/screens/screening/ScreeningForm';
 import Model from '@src/screens/model/Model';
 import Home from '@src/screens/home/Home';
 import NewsList from '@src/screens/news/NewsList';
-import Profile from '@src/screens/profile/Profile';
+import Profile from '@src/screens/account/Account';
 import ScreeningHistory from '@src/screens/screening/ScreeningHistory';
-import ScreeningAll from '@src/screens/screening/ScreeningAll';
+import ScreeningAll from '@src/screens/confirm-screening/ConfirmScreening';
 import AgendaList from '@src/screens/agenda/AgendaList';
+import HbElfoForm from '@src/screens/screening/HbElfoForm';
+import DetailConfirmScreening from '@src/screens/confirm-screening/DetailConfirmScreening';
+import About from '@src/screens/about/About';
+import DataMaster from '@src/screens/data-master/DataMaster';
+import Icon from 'react-native-vector-icons/Ionicons';
+import DetailDataMaster from '@src/screens/data-master/DetailDataMaster';
 
 export const AppStack = () => {
   const Stack = createNativeStackNavigator();
@@ -69,27 +75,58 @@ export const AppStack = () => {
         }}
       />
       <Stack.Screen
-        name="Konfirmasi DNA"
+        name="Konfirmasi Screening"
         component={loggedIn ? ScreeningAll : Login}
         options={{
           headerShown: loggedIn ? true : false,
         }}
       />
-      <Stack.Screen name="Form Screening" component={ScreeningForm} />
+      <Stack.Screen
+        name="Form Screening"
+        component={ScreeningForm}
+        options={{ headerTitle: 'Screening' }}
+      />
+      <Stack.Screen
+        name="Form Hb Elfo"
+        component={HbElfoForm}
+        options={{ headerTitle: 'Screening Lanjutan' }}
+      />
+      <Stack.Screen name="Tentang Aplikasi" component={About} />
+      <Stack.Screen
+        name="Detail Konfirmasi"
+        component={DetailConfirmScreening}
+      />
       <Stack.Screen
         name="Faskes"
         component={Faskes}
         options={{ headerTitle: 'Info Lokasi Faskes' }}
       />
       <Stack.Screen name="Pendaftaran" component={Register} />
-      <Stack.Screen name="Model" component={Model} />
+      <Stack.Screen
+        name="Manajemen Model"
+        component={Model}
+        options={{
+          // eslint-disable-next-line react/no-unstable-nested-components
+          headerRight: () => (
+            <TouchableOpacity onPress={() => navigate('Data Master')}>
+              <Icon
+                name="shield-checkmark-outline"
+                size={24}
+                style={{ color: 'black' }}
+              />
+            </TouchableOpacity>
+          ),
+        }}
+      />
       <Stack.Screen name="Berita dan Artikel" component={NewsList} />
       <Stack.Screen name="Agenda" component={AgendaList} />
       <Stack.Screen
-        name="Profil"
+        name="Akun"
         component={loggedIn ? Profile : Login}
-        options={{ headerTitle: loggedIn ? 'Profil' : 'Login' }}
+        options={{ headerTitle: loggedIn ? 'Akun' : 'Login' }}
       />
+      <Stack.Screen name="Data Master" component={DataMaster} />
+      <Stack.Screen name="Detail Data Master" component={DetailDataMaster} />
     </Stack.Navigator>
   );
 };

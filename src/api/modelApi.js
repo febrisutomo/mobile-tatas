@@ -1,8 +1,8 @@
 import axiosInstance from '@src/api/axiosInstance';
 import RNFetchBlob from 'rn-fetch-blob';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import store from '@src/redux/store';
-import { API_URL } from '@env';
+import { API_URL } from '@src/config';
 import { ToastAndroid } from 'react-native';
 
 export const useGetEvaluateModel = () => {
@@ -17,15 +17,15 @@ export const useGetEvaluateModel = () => {
   });
 };
 
-export const useGetListFiles = () => {
+export const useGetListModel = () => {
   return useQuery({
-    queryKey: ['file'],
+    queryKey: ['model'],
     queryFn: async () => {
-      const res = await axiosInstance.get('model');
+      const res = await axiosInstance.get('models');
       console.log(res.data);
       return res.data;
     },
-    select: (data) => data.files,
+    select: (data) => data.models,
   });
 };
 
@@ -57,4 +57,38 @@ export const downloadDataset = async () => {
     ToastAndroid.show(`Error downloading file: ${error}`, ToastAndroid.SHORT);
     console.error('Error downloading file:', error);
   }
+};
+
+export const useActivateModel = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id) => {
+      const response = await axiosInstance.post(`models/activate/${id}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['model'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['evaluate_model'],
+      });
+    },
+  });
+};
+
+export const useGenerateModel = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data) => {
+      const response = await axiosInstance.post('models/generate', data);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries({
+        queryKey: ['model'],
+      });
+    },
+  });
 };

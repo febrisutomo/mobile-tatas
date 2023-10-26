@@ -13,7 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { FONTS, COLORS } from '@src/constants';
 import { useLogin } from '@src/api/authApi';
-import { API_URL } from '@env';
+import { API_URL } from '@src/config';
 import { Image } from 'react-native';
 
 export default function Login({ navigation }) {

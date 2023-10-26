@@ -31,3 +31,8 @@ export const FONTS = {
   semiBold: 'Manrope-SemiBold',
   bold: 'Manrope-Bold',
 };
+
+export const URL = {
+  API_URL: 'http://103.134.154.86:8000/api/v1',
+  STORAGE_URL: 'http://103.134.154.86/storage/',
+};

@@ -11,7 +11,7 @@ import { useGetProfile } from '@src/api/authApi';
 import Alert from '@components/Alert';
 import { useQueryClient } from '@tanstack/react-query';
 
-export default function Profile({ navigation }) {
+export default function Account({ navigation }) {
   const { data: user } = useGetProfile();
   console.log('Profile ~ user:', user);
   const queryClient = useQueryClient();
@@ -42,11 +42,11 @@ export default function Profile({ navigation }) {
     //   icon: 'shield-checkmark',
     //   route: 'Edit Profile',
     // },
-    // {
-    //   title: 'Pusat Bantuan',
-    //   icon: 'help-circle',
-    //   route: 'Edit Profile',
-    // },
+    {
+      title: 'Tentang Aplikasi',
+      icon: 'help-circle',
+      route: 'Tentang Aplikasi',
+    },
   ];
 
   // if (user?.role?.name === 'Admin') {
@@ -77,14 +77,29 @@ export default function Profile({ navigation }) {
   );
 
   const renderModalFooter = () => (
-    <View style={{ paddingTop: 16, paddingHorizontal: 16 }}>
-      <Button title="Ya, Keluar Sekarang" onPress={handleLogout} />
-      <Button
-        title="Batal Keluar"
-        style={{ backgroundColor: '#fff' }}
-        titleStyle={{ color: COLORS.primary }}
-        onPress={() => bottomSheetModalRef.current?.dismiss()}
-      />
+    <View
+      style={{
+        paddingVertical: 16,
+        paddingHorizontal: 16,
+        gap: 16,
+        flexDirection: 'row',
+      }}
+    >
+      <View style={{ flex: 1 }}>
+        <Button title="Ya" onPress={handleLogout} />
+      </View>
+      <View style={{ flex: 1 }}>
+        <Button
+          title="Batal"
+          style={{
+            backgroundColor: '#fff',
+            borderColor: COLORS.primary,
+            borderWidth: 1,
+          }}
+          titleStyle={{ color: COLORS.primary }}
+          onPress={() => bottomSheetModalRef.current?.dismiss()}
+        />
+      </View>
     </View>
   );
 
@@ -105,17 +120,27 @@ export default function Profile({ navigation }) {
             padding: 16,
           }}
         >
-          <Image
-            source={{
-              uri: `https://ui-avatars.com/api/?name=${user?.name}&background=dc2626&color=fff`,
-            }}
+          <View
             style={{
               height: 64,
               width: 64,
               borderRadius: 50,
               marginBottom: 8,
+              overflow: 'hidden',
             }}
-          />
+          >
+            <Image
+              defaultSource={require('@assets/images/default-profile-picture.png')}
+              source={{
+                uri: `https://ui-avatars.com/api/?name=${user?.name}&background=dc2626&color=fff`,
+              }}
+              style={{
+                flex: 1,
+                resizeMode: 'cover',
+              }}
+            />
+          </View>
+
           <View>
             <Text
               style={{
@@ -165,7 +190,7 @@ export default function Profile({ navigation }) {
                   borderRadius: 12,
                 },
               ]}
-              onPress={() => navigation.navigate(item.route)}
+              onPress={() => navigation.push(item.route)}
             >
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <View
@@ -222,7 +247,7 @@ export default function Profile({ navigation }) {
               textAlign: 'center',
             }}
           >
-            Keluar Akun Mobile Tatas
+            Keluar Akun TATAS Mobile
           </Text>
           <Text
             style={{
@@ -232,7 +257,7 @@ export default function Profile({ navigation }) {
               marginBottom: 16,
             }}
           >
-            Apakah anda yakin ingin keluar dari akun mobile tatas?
+            Apakah anda yakin ingin keluar dari akun TATAS Mobile?
           </Text>
           <Alert>Semua data Anda akan tetap tersimpan secara otomatis.</Alert>
         </View>

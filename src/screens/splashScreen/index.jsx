@@ -25,13 +25,24 @@ export default function SplashScreen() {
           fontSize: 32,
         }}
       >
-        Mobile Tatas
+        TATAS Mobile
       </Text>
-      <ActivityIndicator
+      <Text
+        style={{
+          fontFamily: FONTS.semiBold,
+          color: COLORS.gray,
+          fontSize: 12,
+          position: 'absolute',
+          bottom: 32,
+        }}
+      >
+        Thalassemia Tracking Application System
+      </Text>
+      {/* <ActivityIndicator
         size="large"
         color={COLORS.primary}
         style={{ position: 'absolute', bottom: 32 }}
-      />
+      /> */}
     </SafeAreaView>
   );
 }

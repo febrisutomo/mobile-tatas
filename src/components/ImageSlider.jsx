@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react';
 import { COLORS } from '@src/constants';
 import { Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { STORAGE_URL } from '@src/config';
 
 const Item = ({ item }) => {
   const width = useWindowDimensions().width;
@@ -15,18 +16,24 @@ const Item = ({ item }) => {
           category: item.category.name,
         })
       }
+      style={{
+        width: (width * 3) / 5,
+        backgroundColor: 'gray',
+        borderRadius: 12,
+        height: 400,
+        borderColor: COLORS.lightGrey,
+        borderWidth: 1,
+        overflow: 'hidden',
+      }}
     >
       <Image
         key={item.id}
         style={{
-          width: (width * 3) / 5,
-          backgroundColor: 'gray',
-          borderRadius: 12,
-          height: 400,
-          borderColor: COLORS.lightGrey,
-          borderWidth: 1,
+          flex: 1,
+          resizeMode: 'cover',
         }}
-        source={{ uri: 'http://192.168.1.234:8000/storage/' + item.image }}
+        source={{ uri: STORAGE_URL + item.image }}
+        defaultSource={require('@assets/images/img-placeholder.jpg')}
       />
     </Pressable>
   );
@@ -34,7 +41,7 @@ const Item = ({ item }) => {
 
 const Separator = () => <View style={{ width: 12 }} />;
 
-const ImageSlider = ({ images }) => {
+const ImageSlider = ({ images, isLoading }) => {
   const width = useWindowDimensions().width;
   const [activeIndex, setActiveIndex] = useState(0);
   const flatListRef = useRef(null);
@@ -46,6 +53,21 @@ const ImageSlider = ({ images }) => {
 
     setActiveIndex(currentIndex);
   };
+
+  if (isLoading) {
+    return (
+      <View
+        style={{
+          width: (width * 3) / 5,
+          height: 400,
+          backgroundColor: COLORS.lightGrey, // Change this to your desired skeleton color
+          borderRadius: 12,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      />
+    );
+  }
 
   return (
     <View

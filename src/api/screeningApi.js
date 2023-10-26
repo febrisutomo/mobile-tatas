@@ -7,7 +7,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import store from '@src/redux/store';
-import { API_URL } from '@env';
+import { API_URL } from '@src/config';
 import { ToastAndroid } from 'react-native';
 
 export const useGetScreeningHistoryInfinite = () => {
@@ -69,6 +69,28 @@ export const useAddScreening = () => {
   });
 };
 
+export const useUpdateHbElfo = (id) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data) => {
+      const response = await axiosInstance.patch(
+        `screenings/${id}/update-hb-elfo`,
+        data,
+      );
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries({
+        queryKey: ['screening_result'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['screening_history'],
+      });
+    },
+  });
+};
+
 export const useUpdateDNA = (screening_id) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -76,6 +98,24 @@ export const useUpdateDNA = (screening_id) => {
       const response = await axiosInstance.patch(
         `screenings/${screening_id}/update-dna`,
         data,
+      );
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries({
+        queryKey: ['screenings'],
+      });
+    },
+  });
+};
+
+export const useApproveData = (screening_id) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async () => {
+      const response = await axiosInstance.patch(
+        `screenings/${screening_id}/approve`,
       );
       return response.data;
     },

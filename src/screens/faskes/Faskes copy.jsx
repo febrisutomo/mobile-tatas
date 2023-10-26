@@ -17,7 +17,6 @@ import { COLORS, FONTS } from '@src/constants';
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ModalSelect from '@components/ModalSelect';
-import { useGetFaskes } from '@src/api/faskesApi';
 
 MapboxGL.setAccessToken(
   'pk.eyJ1IjoiZmVicmlzb2V0IiwiYSI6ImNrdm0zMDFoa2RrajMzMnE2bHdmZ3Nlc2gifQ.xEhvQMKMtB_g-5QeasQ-jw',
@@ -46,6 +45,63 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 
   return distance;
 }
+
+const locationsApi = [
+  {
+    id: 1,
+    name: 'RSUD Banyumas',
+    address:
+      'Jl. Rumah Sakit No.1, Karangpucung, Kejawar, Kec. Banyumas, Kabupaten Banyumas, Jawa Tengah 53192',
+    phone: '(0281) 796031',
+    coordinates: '-7.529621357095523, 109.2923916796076',
+    type: 'Rumah Sakit',
+  },
+  {
+    id: 2,
+    name: 'RSU Siaga Medika Banyumas',
+    address:
+      'Jl. Pramuka No.55, Mruyung, Sudagaran, Kec. Banyumas, Kabupaten Banyumas, Jawa Tengah 53192',
+    phone: '(0281) 796645',
+    coordinates: '-7.524962494298697, 109.29355031961433',
+    type: 'Rumah Sakit',
+  },
+  {
+    id: 3,
+    name: 'RSU Wiradadi Husada',
+    address:
+      'Jl. Menteri Supeno No.25, Dusun I Wiradadi, Wiradadi, Kec. Sokaraja, Kabupaten Banyumas, Jawa Tengah 53181',
+    phone: '(0281) 6846225',
+    coordinates: '-7.4583297669642885, 109.27196758000761',
+    type: 'Rumah Sakit',
+  },
+  {
+    id: 4,
+    name: 'RSUP Margono Soekarjo',
+    address:
+      'Jl. Dr. Gumbreg No.1, Kebontebu, Berkoh, Kec. Purwokerto Sel., Kabupaten Banyumas, Jawa Tengah 53146',
+    phone: '(0281) 632708',
+    coordinates: '-7.436033001935134, 109.26741183275088',
+    type: 'Rumah Sakit',
+  },
+  {
+    id: 5,
+    name: 'Puskesmas Kalibagor',
+    address:
+      'Jl. Suwarjono No.48, Dusun II Kalibagor, Kalibagor, Kec. Kalibagor, Kabupaten Banyumas, Jawa Tengah 53182',
+    phone: '(0281) 6438207',
+    coordinates: '-7.472995261072819, 109.2974894',
+    type: 'Puskesmas',
+  },
+  {
+    id: 6,
+    name: 'Puskesmas Banyumas',
+    address:
+      'Jl. Gatot Subroto No.181, Banyumas, Sudagaran, Kec. Banyumas, Kabupaten Banyumas, Jawa Tengah 53192',
+    phone: '(0281) 796300',
+    coordinates: '-7.516295142056291, 109.295958153417444',
+    type: 'Puskesmas',
+  },
+];
 
 const FeatureLabel = ({ message }) => {
   return (
@@ -280,15 +336,9 @@ export default function Maps() {
 
   const [type, setType] = useState('Rumah Sakit');
 
-  const { data: faskes = [] } = useGetFaskes();
-
   useEffect(() => {
-    // console.log(data);
-    if (faskes.length === 0) {
-      return;
-    }
-    setLocations(faskes.filter((location) => location.type === type));
-  }, [faskes, type]);
+    setLocations(locationsApi.filter((location) => location.type === type));
+  }, [type]);
 
   const bottomSheetRef = useRef(null);
 

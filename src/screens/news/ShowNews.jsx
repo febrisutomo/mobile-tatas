@@ -4,7 +4,7 @@ import { useWindowDimensions } from 'react-native';
 import RenderHTML from 'react-native-render-html';
 import { ScrollView } from 'react-native';
 import { FONTS, COLORS } from '@src/constants';
-import { IMAGE_URL } from '@env';
+import { STORAGE_URL } from '@src/config';
 
 export default function ShowNews({ route }) {
   const { width } = useWindowDimensions();
@@ -21,7 +21,7 @@ export default function ShowNews({ route }) {
           style={{
             fontSize: 20,
             fontFamily: FONTS.semiBold,
-            marginBottom: 12,
+            marginBottom: 8,
             color: COLORS.dark,
           }}
         >
@@ -33,7 +33,7 @@ export default function ShowNews({ route }) {
             fontSize: 14,
             fontFamily: FONTS.medium,
             color: 'gray',
-            marginBottom: 16,
+            marginBottom: 20,
           }}
         >
           {new Date(news.created_at).toLocaleDateString('id-ID', {
@@ -44,19 +44,27 @@ export default function ShowNews({ route }) {
           })}
         </Text>
 
-        <View style={{ height: 200, marginBottom: 16 }}>
+        <View
+          style={{
+            height: 200,
+            marginBottom: 16,
+            borderRadius: 12,
+            overflow: 'hidden',
+            borderColor: COLORS.lightGrey,
+            borderWidth: 1,
+          }}
+        >
           <Image
             source={
               news.image
                 ? {
-                    uri: IMAGE_URL + news.image,
+                    uri: STORAGE_URL + news.image,
                   }
                 : require('@assets/images/img-placeholder.jpg')
             }
             defaultSource={require('@assets/images/img-placeholder.jpg')}
             style={{
-              flex: 1, // This makes the image expand to fill the parent View's height
-              borderRadius: 12,
+              flex: 1,
               resizeMode: 'contain',
             }}
           />

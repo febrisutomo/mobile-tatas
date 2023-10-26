@@ -3,7 +3,12 @@ import React, { memo } from 'react';
 import { FONTS, COLORS } from '@src/constants';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const ScreeningItem = ({ item, onPress, hideName = false }) => {
+const ScreeningItem = ({
+  item,
+  onPress,
+  hideName = false,
+  showApproved = false,
+}) => {
   return (
     <Pressable
       style={({ pressed }) => [
@@ -21,23 +26,26 @@ const ScreeningItem = ({ item, onPress, hideName = false }) => {
       <View
         style={{
           flex: 1,
-          backgroundColor:
+          borderRadius: 12,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Icon
+          name="flask-outline"
+          size={32}
+          color={
             item.dna != null
               ? item.dna
                 ? COLORS.danger
                 : COLORS.success
               : item.prediction
               ? COLORS.danger
-              : COLORS.success,
-          borderRadius: 12,
-          marginRight: 16,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <Icon name="flask-outline" size={32} color="white" />
+              : COLORS.success
+          }
+        />
       </View>
-      <View style={{ flex: 4 }}>
+      <View style={{ flex: 5 }}>
         <View
           style={{
             flexDirection: 'row',
@@ -48,7 +56,7 @@ const ScreeningItem = ({ item, onPress, hideName = false }) => {
           <View>
             <Text
               style={{
-                fontSize: 10,
+                fontSize: 12,
                 fontFamily: FONTS.semiBold,
                 color: COLORS.gray,
                 marginBottom: 4,
@@ -59,7 +67,7 @@ const ScreeningItem = ({ item, onPress, hideName = false }) => {
                 month: 'long',
                 day: 'numeric',
               })}
-              {' •  Pukul '}
+              {' • '}
               {new Date(item.date).toLocaleTimeString('id-ID', {
                 hour: '2-digit',
                 minute: '2-digit',
@@ -92,6 +100,18 @@ const ScreeningItem = ({ item, onPress, hideName = false }) => {
                     item.probability
                   }%) `}
             </Text>
+            {showApproved && (
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontFamily: FONTS.semiBold,
+                  marginBottom: 4,
+                  color: COLORS.dark,
+                }}
+              >
+                {item?.verified ? 'Disetujui' : 'Belum disetujui'}
+              </Text>
+            )}
           </View>
           <Icon name="chevron-forward" size={16} color={COLORS.primary} />
         </View>

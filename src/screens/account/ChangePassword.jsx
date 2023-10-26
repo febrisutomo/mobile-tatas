@@ -46,7 +46,7 @@ export default function ChangePassword({ navigation }) {
       const response = await changePassword(data);
       ToastAndroid.show(response.message, ToastAndroid.SHORT);
       console.log(response);
-      navigation.navigate('Profile');
+      navigation.pop();
     } catch (error) {
       ToastAndroid.show(
         error?.response?.data?.message || error.message,

@@ -1,16 +1,45 @@
-import React from 'react';
-import { View, SafeAreaView, Text, ActivityIndicator } from 'react-native';
-import { useGetEvaluateModel } from '@src/api/screeningApi';
+import React, { useCallback, useRef } from 'react';
+import {
+  View,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  ActivityIndicator,
+} from 'react-native';
+import { downloadDataset, useGetEvaluateModel } from '@src/api/screeningApi';
 import { COLORS, FONTS } from '@src/constants';
+import { useGetProfile } from '@src/api/authApi';
 import { BottomSheetBackdrop, BottomSheetModal } from '@gorhom/bottom-sheet';
 import Button from '@components/Button';
+import UploadFileScreen from './UploadFile';
 import ModelList from './ModelList';
-import TextInput from '@components/TextInput';
-import { useGenerateModel } from '@src/api/modelApi';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { ToastAndroid } from 'react-native';
+
+const Row = ({ label, value }) => {
+  return (
+    <View style={{ flexDirection: 'row' }}>
+      <Text
+        style={{
+          flex: 1,
+          fontSize: 14,
+          fontFamily: FONTS.bold,
+          color: COLORS.dark,
+        }}
+      >
+        {label}
+      </Text>
+      <Text
+        style={{
+          flex: 3,
+          fontSize: 14,
+          fontFamily: FONTS.semiBold,
+          color: COLORS.gray,
+        }}
+      >
+        : {value}
+      </Text>
+    </View>
+  );
+};
 
 const Widget = ({ value, label }) => {
   return (
@@ -44,59 +73,19 @@ const Widget = ({ value, label }) => {
 };
 
 export default function Model({ navigation }) {
-  const { mutateAsync: generateModel, isLoading: generatingModel } =
-    useGenerateModel();
+  const { data: result, isLoading, error, isError } = useGetEvaluateModel();
 
-  const schema = yup.object().shape({
-    name: yup.string().required('Nama tidak boleh kosong'),
-  });
+  const { data: user } = useGetProfile();
 
-  const {
-    control,
-    handleSubmit,
-    setError,
-    clearErrors,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    defaultValues: {
-      name: '',
-    },
-    resolver: yupResolver(schema),
-  });
+  const bottomSheetModalRef = useRef(null);
 
-  const onSubmit = async (data) => {
-    console.log(data);
-    clearErrors('name');
-    try {
-      const response = await generateModel(data);
-      ToastAndroid.show(response.message, ToastAndroid.SHORT);
-      // console.log(response);
-      bottomSheetModalRef.current?.dismiss();
-      setValue('name', '');
-    } catch (error) {
-      ToastAndroid.show(
-        error?.response?.data?.message || error.message,
-        ToastAndroid.SHORT,
-      );
-      setError('name', {
-        type: 'unique',
-        message: error?.response?.data?.message || error.message,
-      });
-    }
-  };
-
-  const { data: result, isLoading, isError } = useGetEvaluateModel();
-
-  const bottomSheetModalRef = React.useRef(null);
-
-  const handlePresentModal = React.useCallback(() => {
+  const handlePresentModal = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
 
-  const handleSheetChanges = React.useCallback((index) => {}, []);
+  const handleSheetChanges = useCallback((index) => {}, []);
 
-  const renderBackdrop = React.useCallback(
+  const renderBackdrop = useCallback(
     (props) => (
       <BottomSheetBackdrop
         {...props}
@@ -121,17 +110,19 @@ export default function Model({ navigation }) {
   }
 
   if (isError) {
-    return (
-      <SafeAreaView
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          backgroundColor: 'white',
-        }}
-      >
-        <Text>Error</Text>
-      </SafeAreaView>
-    );
+    if (error.response.status === 404) {
+      return (
+        <SafeAreaView
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            backgroundColor: 'white',
+          }}
+        >
+          <Text>Error</Text>
+        </SafeAreaView>
+      );
+    }
   }
 
   return (
@@ -148,6 +139,7 @@ export default function Model({ navigation }) {
             style={{
               backgroundColor: 'white',
               borderRadius: 12,
+              marginBottom: 16,
               padding: 16,
               borderWidth: 1,
               borderColor: COLORS.lightGrey,
@@ -161,8 +153,9 @@ export default function Model({ navigation }) {
             <Widget value={result.precision} label={'Precision'} />
             <Widget value={result.f1} label={'F1'} />
           </View>
-          <Button title="Generate Model Baru" onPress={handlePresentModal} />
-          <ModelList />
+          <Button title="Download Dataset" onPress={downloadDataset} />
+          <UploadFileScreen />
+          {/* <ListFile /> */}
         </View>
       </View>
 
@@ -184,22 +177,8 @@ export default function Model({ navigation }) {
               textAlign: 'center',
             }}
           >
-            Generate Model Baru
+            Detail Screeening
           </Text>
-          <Controller
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                label="Nama Model"
-                required
-                placeholder="Masukkan Nama Model"
-                value={value}
-                onChangeText={onChange}
-                error={errors?.name?.message}
-              />
-            )}
-            name="name"
-          />
         </View>
         <View
           style={{
@@ -211,7 +190,13 @@ export default function Model({ navigation }) {
             backgroundColor: 'white',
           }}
         >
-          <Button title="Simpan" onPress={handleSubmit(onSubmit)} />
+          <Button
+            title="Screeening Ulang"
+            onPress={() => {
+              bottomSheetModalRef.current?.dismiss();
+              navigation.navigate('Form Screening');
+            }}
+          />
         </View>
       </BottomSheetModal>
     </SafeAreaView>

@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native';
 import Home from '@src/screens/home/Home';
 import NewsList from '@src/screens/news/NewsList';
-import Profile from '@src/screens/profile/Profile';
+import Profile from '@src/screens/account/Account';
 import Login from '@src/screens/auth/Login';
 import Maps from '@src/screens/faskes/Faskes';
 
@@ -64,7 +64,7 @@ export const HomeTabs = () => {
         component={Home}
         options={{
           // headerShown: false,
-          headerTitle: 'Mobile Tatas',
+          headerTitle: 'TATAS Mobile',
           headerTitleStyle: { fontFamily: FONTS.bold, color: COLORS.primary },
           headerLeftContainerStyle: { display: 'none' },
         }}
